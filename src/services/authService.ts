@@ -10,6 +10,23 @@ const axiosInstance = axios.create({
   },
 });
 
+// Intercepteur pour gérer silencieusement les erreurs 401 sur /me
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Ne pas afficher les erreurs 401 sur l'endpoint /me (utilisateur non connecté)
+    if (error.response?.status === 401 && error.config?.url?.includes('/me/')) {
+      // Erreur attendue - utilisateur non connecté
+      return Promise.reject(error);
+    }
+    // Pour les autres erreurs, afficher dans la console
+    if (error.response?.status !== 401) {
+      console.error('API Error:', error.response?.data || error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const authService = {
   async login(credentials: { email: string; password: string }) {
     const response = await axiosInstance.post(API_ENDPOINTS.LOGIN, {

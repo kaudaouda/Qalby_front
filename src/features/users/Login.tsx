@@ -22,9 +22,10 @@ export const Login = () => {
     dispatch(clearError());
 
     try {
+      // Le backend retourne déjà toutes les données de l'utilisateur dans la réponse du login
       await dispatch(login(formData)).unwrap();
       toast.success('Connexion réussie!');
-      navigate('/dashboard');
+      navigate('/');
     } catch (err: any) {
       toast.error(err || 'Échec de la connexion');
     }

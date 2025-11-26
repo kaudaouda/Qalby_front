@@ -93,6 +93,8 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user;
         state.error = null;
+        // Indiquer qu'une session existe (pour AuthInitializer)
+        localStorage.setItem('hasSession', 'true');
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -107,7 +109,7 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(register.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(register.fulfilled, (state) => {
         state.isLoading = false;
         state.error = null;
       })
@@ -122,6 +124,8 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
         state.error = null;
+        // Supprimer le flag de session
+        localStorage.removeItem('hasSession');
       });
 
     // Get Current User
@@ -133,11 +137,15 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
+        // Confirmer que la session existe
+        localStorage.setItem('hasSession', 'true');
       })
       .addCase(getCurrentUser.rejected, (state) => {
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
+        // Supprimer le flag de session car les cookies ont expiré ou sont invalides
+        localStorage.removeItem('hasSession');
       });
   },
 });
