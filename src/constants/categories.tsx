@@ -2,7 +2,7 @@ import {
   FaGraduationCap, 
   FaHeartbeat, 
   FaExclamationTriangle, 
-  FaPartyHorn,
+  FaGlassCheers,
   FaHandsHelping,
   FaFutbol,
   FaHeart,
@@ -41,7 +41,7 @@ export const CATEGORIES: Category[] = [
   { 
     value: 'event', 
     label: 'Événement', 
-    icon: FaPartyHorn, 
+    icon: FaGlassCheers, 
     description: 'Mariage, anniversaire...' 
   },
   { 
