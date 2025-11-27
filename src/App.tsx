@@ -5,6 +5,7 @@ import { Register } from './features/users/Register';
 import { CampaignPage } from './features/funds/CampaignPage';
 import { CreateFund } from './features/funds/CreateFund';
 import { ExploreFunds } from './features/funds/ExploreFunds';
+import { PaymentPage } from './features/payment/PaymentPage';
 import { AuthInitializer, ProtectedRoute } from './components/common';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       {/* Routes des cagnottes */}
       <Route path="/campaigns" element={<ExploreFunds />} />
       <Route path="/campaign/:id" element={<CampaignPage />} />
+      <Route path="/payment/:fundId" element={<PaymentPage />} />
       <Route 
         path="/create-fund" 
         element={

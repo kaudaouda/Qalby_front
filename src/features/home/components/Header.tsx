@@ -51,7 +51,7 @@ export const Header = () => {
                   </svg>
                   Créer une cagnotte
                 </Link>
-                <UserMenu />
+              <UserMenu />
               </>
             ) : (
               <>
@@ -125,9 +125,9 @@ export const Header = () => {
                       </svg>
                       Créer une cagnotte
                     </Link>
-                    <div className="px-4 flex justify-center">
-                      <UserMenu />
-                    </div>
+                  <div className="px-4 flex justify-center">
+                    <UserMenu />
+                  </div>
                   </>
                 ) : (
                   <>

@@ -148,16 +148,16 @@ export const PopularCampaigns = () => {
               <Link
                 key={fund.id}
                 to={`/campaign/${fund.id}`}
-                className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer"
-              >
-                {/* Image */}
+              className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer"
+            >
+              {/* Image */}
                 <div className="relative h-48 overflow-hidden bg-gradient-to-br from-qalby-orange-100 to-qalby-orange-200">
                   {fund.image ? (
-                    <img
+                <img
                       src={fund.image}
                       alt={fund.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       {CategoryIcon && (
@@ -165,63 +165,63 @@ export const PopularCampaigns = () => {
                       )}
                     </div>
                   )}
-                  {/* Category Badge */}
+                {/* Category Badge */}
                   <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-700 flex items-center gap-1">
                     {CategoryIcon && <CategoryIcon className="text-base" />}
                     {getCategoryLabel(fund.category)}
-                  </div>
-                  {/* Like Button */}
+                </div>
+                {/* Like Button */}
                   <button 
                     onClick={(e) => e.preventDefault()}
                     className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-colors"
                   >
-                    <FiHeart className="w-5 h-5 text-gray-700" />
-                  </button>
-                </div>
+                  <FiHeart className="w-5 h-5 text-gray-700" />
+                </button>
+              </div>
 
-                {/* Content */}
-                <div className="p-6 space-y-4">
-                  {/* Title */}
-                  <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-qalby-orange-600 transition-colors">
+              {/* Content */}
+              <div className="p-6 space-y-4">
+                {/* Title */}
+                <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-qalby-orange-600 transition-colors">
                     {fund.title}
-                  </h3>
+                </h3>
 
-                  {/* Progress */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600">Collecté</span>
-                      <span className="font-semibold text-qalby-orange-600">
+                {/* Progress */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Collecté</span>
+                    <span className="font-semibold text-qalby-orange-600">
                         {progress}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2">
-                      <div
-                        className="bg-qalby-orange-500 rounded-full h-2 transition-all duration-500"
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      className="bg-qalby-orange-500 rounded-full h-2 transition-all duration-500"
                         style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                    <div className="flex justify-between items-baseline">
-                      <div>
-                        <div className="text-2xl font-bold text-gray-900">
+                    />
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <div>
+                      <div className="text-2xl font-bold text-gray-900">
                           {formatCurrency(fund.current_amount)}
-                        </div>
-                        <div className="text-sm text-gray-500">
+                      </div>
+                      <div className="text-sm text-gray-500">
                           sur {formatCurrency(fund.goal_amount)} FCFA
-                        </div>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  {/* Stats */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center space-x-1 text-gray-600">
-                      <FiUsers className="w-4 h-4" />
+                {/* Stats */}
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="flex items-center space-x-1 text-gray-600">
+                    <FiUsers className="w-4 h-4" />
                       <span className="text-sm font-medium">
                         {fund.contributors_count || 0}
                       </span>
-                    </div>
-                    <div className="flex items-center space-x-1 text-gray-600">
-                      <FiClock className="w-4 h-4" />
+                  </div>
+                  <div className="flex items-center space-x-1 text-gray-600">
+                    <FiClock className="w-4 h-4" />
                       <span className="text-sm font-medium">{daysLeft} jours</span>
                     </div>
                   </div>

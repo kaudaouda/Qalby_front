@@ -8,14 +8,18 @@ import {
   getFundContributors,
   clearFund,
 } from '../../store/slices/fundSlice';
-import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward, FiGift, FiAlertCircle } from 'react-icons/fi';
 import { useCategories } from '../../hooks/useCategories';
+import { CreatorBanner } from './components/CreatorBanner';
 
 export const CampaignPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { categories } = useCategories();
+  
+  // Récupérer l'utilisateur connecté
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   const {
     currentFund,
@@ -58,7 +62,7 @@ export const CampaignPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">⚠️</span>
+            <FiAlertCircle className="w-12 h-12 text-red-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Erreur</h2>
           <p className="text-gray-600 mb-6">{error}</p>
@@ -101,9 +105,33 @@ export const CampaignPage = () => {
 
   const CategoryIcon = getCategoryIcon(currentFund.category);
   const progressPercentage = Math.min(currentFund.progress_percentage, 100);
+  
+  // Vérifier si l'utilisateur est le créateur de la cagnotte
+  const isCreator = Boolean(user && currentFund.creator?.id === user.id);
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: currentFund.title,
+        text: `Soutenez mon projet: ${currentFund.title}`,
+        url: window.location.href,
+      }).catch(() => {
+        // Fallback: copier le lien
+        navigator.clipboard.writeText(window.location.href);
+        alert('Lien copié dans le presse-papiers !');
+      });
+    } else {
+      // Fallback: copier le lien
+      navigator.clipboard.writeText(window.location.href);
+      alert('Lien copié dans le presse-papiers !');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      {/* Bannière pour le créateur */}
+      <CreatorBanner isVisible={isCreator} />
+      
       {/* Header avec image */}
       <div className="relative h-72 md:h-96 overflow-hidden">
         {currentFund.image ? (
@@ -206,8 +234,8 @@ export const CampaignPage = () => {
                     <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Collecté</p>
                     <span className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-qalby-orange-600 to-qalby-orange-500 bg-clip-text text-transparent">
                       {formatCurrency(currentFund.current_amount)} FCFA
-                    </span>
-                  </div>
+                  </span>
+                </div>
                   <div className="text-right">
                     <p className="text-sm font-medium text-gray-500">Objectif</p>
                     <p className="text-lg font-semibold text-gray-700">
@@ -330,13 +358,33 @@ export const CampaignPage = () => {
               </h2>
               <div className="space-y-3">
                 {/* Bouton Participer */}
-                <button className="w-full py-4 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white rounded-2xl font-bold hover:from-qalby-orange-600 hover:to-qalby-orange-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 transform">
+                <button 
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      // Rediriger vers login avec l'URL de retour
+                      navigate('/login', { state: { from: `/campaign/${id}` } });
+                    } else {
+                      navigate(`/payment/${id}`);
+                    }
+                  }}
+                  className="w-full py-4 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white rounded-2xl font-bold hover:from-qalby-orange-600 hover:to-qalby-orange-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 transform"
+                >
                   <FiHeart className="w-5 h-5" />
-                  Participer
+                  {isAuthenticated ? 'Participer' : 'Se connecter pour participer'}
                 </button>
                 
+                {/* Message pour les non connectés */}
+                {!isAuthenticated && (
+                  <p className="text-xs text-center text-gray-600">
+                    Vous devez être connecté pour participer à cette cagnotte
+                  </p>
+                )}
+                
                 {/* Bouton Partager */}
-                <button className="w-full py-4 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl font-semibold hover:border-qalby-orange-500 hover:text-qalby-orange-600 hover:bg-qalby-orange-50 transition-all duration-300 flex items-center justify-center gap-2">
+                <button 
+                  onClick={handleShare}
+                  className="w-full py-4 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl font-semibold hover:border-qalby-orange-500 hover:text-qalby-orange-600 hover:bg-qalby-orange-50 transition-all duration-300 flex items-center justify-center gap-2"
+                >
                   <FiShare2 className="w-5 h-5" />
                   Partager
                 </button>
@@ -344,21 +392,22 @@ export const CampaignPage = () => {
               
               {/* Message d'encouragement */}
               <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
-                <p className="text-sm text-blue-900 text-center font-medium">
-                  💝 Chaque contribution compte pour atteindre l'objectif !
-                </p>
+                <div className="flex items-center justify-center gap-2">
+                  <FiGift className="w-5 h-5 text-blue-600" />
+                  <p className="text-sm text-blue-900 text-center font-medium">
+                    Chaque contribution compte pour atteindre l'objectif !
+                  </p>
+                </div>
               </div>
 
               {/* Contributeurs */}
               {contributors.length > 0 && (
                 <div className="mt-8 pt-6 border-t border-gray-100">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold text-gray-900">
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                     Top contributeurs
+                      <FiAward className="w-5 h-5 text-yellow-500" />
                   </h3>
-                    <span className="text-sm font-semibold text-qalby-orange-600">
-                      🏆
-                    </span>
                   </div>
                   <div className="space-y-3">
                     {contributors.slice(0, 5).map((contributor, index) => (
@@ -374,8 +423,8 @@ export const CampaignPage = () => {
                             </span>
                             </div>
                             {index === 0 && (
-                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center text-xs">
-                                👑
+                              <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+                                <FiAward className="w-3.5 h-3.5 text-yellow-900" />
                               </div>
                             )}
                           </div>
