@@ -281,63 +281,75 @@ export const PaymentPage = () => {
 
                 {/* Montant */}
                 <div>
-                  <label htmlFor="amount" className="block text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <label htmlFor="amount" className="block text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
                     <span className="w-8 h-8 bg-gradient-to-br from-qalby-orange-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">2</span>
                     Montant à contribuer
                   </label>
-                  <div className="relative">
-                    {/* Bouton moins */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const currentAmount = parseFloat(amount) || 0;
-                        const newAmount = Math.max(0, currentAmount - 100);
-                        setAmount(newAmount.toString());
-                      }}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 hover:from-qalby-orange-100 hover:to-purple-100 rounded-lg flex items-center justify-center transition-all hover:scale-110 hover:shadow-md z-10"
-                    >
-                      <FiMinus className="w-5 h-5 text-gray-600" />
-                    </button>
+                  
+                  {/* Stepper design */}
+                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border-2 border-gray-200">
+                    <div className="flex items-center justify-between gap-4">
+                      {/* Bouton Moins */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const currentAmount = parseFloat(amount) || 0;
+                          const newAmount = Math.max(0, currentAmount - 100);
+                          setAmount(newAmount.toString());
+                        }}
+                        className="w-14 h-14 bg-white hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100 rounded-xl flex items-center justify-center transition-all hover:scale-110 hover:shadow-lg border-2 border-gray-200 hover:border-red-300 group"
+                      >
+                        <FiMinus className="w-6 h-6 text-gray-600 group-hover:text-red-600" />
+                      </button>
+                      
+                      {/* Affichage du montant */}
+                      <div className="flex-1">
+                        <input
+                          type="number"
+                          id="amount"
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value)}
+                          placeholder="0"
+                          min="0"
+                          step="100"
+                          className="w-full bg-white border-2 border-gray-300 rounded-xl px-4 py-4 text-center text-3xl font-bold text-gray-900 focus:outline-none focus:border-qalby-orange-500 focus:ring-4 focus:ring-qalby-orange-100 transition-all"
+                        />
+                        <p className="text-center text-sm font-semibold text-gray-600 mt-2">F CFA</p>
+                      </div>
+                      
+                      {/* Bouton Plus */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const currentAmount = parseFloat(amount) || 0;
+                          setAmount((currentAmount + 100).toString());
+                        }}
+                        className="w-14 h-14 bg-gradient-to-br from-qalby-orange-500 to-purple-600 hover:from-qalby-orange-600 hover:to-purple-700 rounded-xl flex items-center justify-center transition-all hover:scale-110 hover:shadow-xl shadow-lg"
+                      >
+                        <FiPlus className="w-6 h-6 text-white" />
+                      </button>
+                    </div>
                     
-                    <input
-                      type="number"
-                      id="amount"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      placeholder="1000"
-                      min="0"
-                      className="w-full px-16 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 focus:ring-4 focus:ring-qalby-orange-100 transition-all text-lg font-bold text-center"
-                    />
-                    
-                    {/* Bouton plus */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const currentAmount = parseFloat(amount) || 0;
-                        setAmount((currentAmount + 100).toString());
-                      }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-gradient-to-br from-qalby-orange-500 to-purple-600 hover:from-qalby-orange-600 hover:to-purple-700 rounded-lg flex items-center justify-center transition-all hover:scale-110 hover:shadow-lg z-10"
-                    >
-                      <FiPlus className="w-5 h-5 text-white" />
-                    </button>
+                    <p className="text-xs text-gray-500 mt-4 text-center">
+                      Cliquez sur <span className="font-semibold">+</span> ou <span className="font-semibold">-</span> pour ajuster par 100 F CFA
+                    </p>
                   </div>
                   
-                  <p className="text-xs text-gray-500 mt-2 text-center">
-                    Utilisez les boutons +/- pour ajuster le montant par tranche de 100 F CFA
-                  </p>
-                  
                   {/* Suggestions de montant */}
-                  <div className="flex gap-2 mt-3 flex-wrap">
-                    {[500, 1000, 2000, 5000, 10000].map((val) => (
-                      <button
-                        key={val}
-                        type="button"
-                        onClick={() => setAmount(val.toString())}
-                        className="px-4 py-2 text-sm bg-gradient-to-br from-gray-50 to-gray-100 hover:from-qalby-orange-100 hover:to-purple-100 hover:text-qalby-orange-700 border border-gray-200 hover:border-qalby-orange-300 rounded-xl transition-all font-medium hover:scale-105 hover:shadow-md"
-                      >
-                        {formatCurrency(val)}
-                      </button>
-                    ))}
+                  <div className="mt-4">
+                    <p className="text-xs text-gray-600 mb-2 font-medium">Montants suggérés :</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {[500, 1000, 2000, 5000, 10000].map((val) => (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => setAmount(val.toString())}
+                          className="px-4 py-2 text-sm bg-white hover:bg-gradient-to-br hover:from-qalby-orange-50 hover:to-purple-50 text-gray-700 hover:text-qalby-orange-700 border-2 border-gray-200 hover:border-qalby-orange-400 rounded-xl transition-all font-semibold hover:scale-105 hover:shadow-md"
+                        >
+                          {formatCurrency(val)}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
