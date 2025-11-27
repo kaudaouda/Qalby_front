@@ -42,6 +42,7 @@ export interface Fund {
   updated_at: string;
   progress_percentage: number;
   days_remaining: number;
+  contributors_count?: number;
 }
 
 // Fund Detail (with statistics)
