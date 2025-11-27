@@ -20,7 +20,7 @@ export const userService = {
    * Récupérer les statistiques de l'utilisateur connecté
    */
   getUserStatistics: async (): Promise<UserStats> => {
-    const response = await axiosInstance.get('/api/users/statistics/');
+    const response = await axiosInstance.get('/api/users/users/statistics/');
     return response.data;
   },
 
@@ -36,7 +36,7 @@ export const userService = {
     if (data.username !== undefined) formData.append('username', data.username);
     if (data.profile_picture) formData.append('profile_picture', data.profile_picture);
 
-    const response = await axiosInstance.put('/api/users/update_profile/', formData, {
+    const response = await axiosInstance.put('/api/users/users/update_profile/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
