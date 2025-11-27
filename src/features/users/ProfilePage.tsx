@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { FiUser, FiMail, FiPhone, FiGlobe, FiEdit2, FiSave, FiX, FiCamera, FiHeart, FiTrendingUp, FiAward, FiCalendar, FiDollarSign } from 'react-icons/fi';
+import { FiUser, FiMail, FiPhone, FiGlobe, FiEdit2, FiSave, FiX, FiCamera, FiHeart, FiLock, FiFileText, FiBell, FiCalendar } from 'react-icons/fi';
 import { authService } from '../../services/authService';
 import { toast } from 'react-toastify';
 
@@ -26,10 +26,13 @@ interface UserStats {
   total_contributed: number;
 }
 
+type TabType = 'funds' | 'info' | 'security' | 'identity' | 'communication';
+
 export const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
+  const [activeTab, setActiveTab] = useState<TabType>('funds');
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -81,7 +84,6 @@ export const ProfilePage = () => {
       setStats(data);
     } catch (error) {
       console.error('Erreur lors du chargement des statistiques:', error);
-      // Fallback to empty stats
       setStats({
         funds_created: 0,
         total_funds_amount: 0,
@@ -114,7 +116,6 @@ export const ProfilePage = () => {
       setIsSaving(true);
       const { userService } = await import('../../services/userService');
       
-      // Préparer les données à envoyer
       const updateData: any = {
         first_name: formData.first_name,
         last_name: formData.last_name,
@@ -122,7 +123,6 @@ export const ProfilePage = () => {
         username: formData.username,
       };
 
-      // Si un fichier avatar a été sélectionné, l'ajouter
       const avatarInput = document.getElementById('avatar-upload') as HTMLInputElement;
       if (avatarInput?.files?.[0]) {
         updateData.profile_picture = avatarInput.files[0];
@@ -193,6 +193,14 @@ export const ProfilePage = () => {
     return profile?.email || 'Utilisateur';
   };
 
+  const tabs = [
+    { id: 'funds' as TabType, label: 'Mes cagnottes', icon: FiHeart },
+    { id: 'info' as TabType, label: 'Mes informations', icon: FiUser },
+    { id: 'security' as TabType, label: 'Sécurité', icon: FiLock },
+    { id: 'identity' as TabType, label: "Document d'identité", icon: FiFileText },
+    { id: 'communication' as TabType, label: 'Préférences de communication', icon: FiBell },
+  ];
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -240,7 +248,7 @@ export const ProfilePage = () => {
                   </div>
                 )}
               </div>
-              {isEditing && (
+              {activeTab === 'info' && isEditing && (
                 <label
                   htmlFor="avatar-upload"
                   className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -281,240 +289,262 @@ export const ProfilePage = () => {
                 )}
               </div>
             </div>
-
-            {/* Bouton d'édition */}
-            {!isEditing ? (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-qalby-orange-500 text-white rounded-lg hover:bg-qalby-orange-600 transition-all shadow-md hover:shadow-lg font-medium"
-              >
-                <FiEdit2 className="w-4 h-4" />
-                Modifier le profil
-              </button>
-            ) : (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleCancel}
-                  disabled={isSaving}
-                  className="flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all font-medium disabled:opacity-50"
-                >
-                  <FiX className="w-4 h-4" />
-                  Annuler
-                </button>
-                <button
-                  onClick={handleSave}
-                  disabled={isSaving}
-                  className="flex items-center gap-2 px-6 py-3 bg-qalby-orange-500 text-white rounded-lg hover:bg-qalby-orange-600 transition-all shadow-md hover:shadow-lg font-medium disabled:opacity-50"
-                >
-                  {isSaving ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Enregistrement...
-                    </>
-                  ) : (
-                    <>
-                      <FiSave className="w-4 h-4" />
-                      Enregistrer
-                    </>
-                  )}
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>
 
-      {/* Contenu principal */}
+      {/* Navigation + Contenu */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Colonne gauche - Statistiques */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Statistiques */}
-            {stats && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <FiTrendingUp className="w-5 h-5 text-qalby-orange-500" />
-                  Mes statistiques
-                </h2>
-                <div className="space-y-4">
-                  {/* Cagnottes créées */}
-                  <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100/30 rounded-xl border border-blue-100">
-                    <div className="flex items-center justify-between mb-2">
-                      <FiHeart className="w-5 h-5 text-blue-600" />
-                      <span className="text-2xl font-bold text-blue-900">{stats.funds_created}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-blue-900 mb-1">Cagnottes créées</p>
-                    <p className="text-xs text-blue-700">
-                      {formatCurrency(stats.total_funds_amount)} collectés
-                    </p>
-                  </div>
-
-                  {/* Contributions */}
-                  <div className="p-4 bg-gradient-to-br from-green-50 to-green-100/30 rounded-xl border border-green-100">
-                    <div className="flex items-center justify-between mb-2">
-                      <FiDollarSign className="w-5 h-5 text-green-600" />
-                      <span className="text-2xl font-bold text-green-900">{stats.contributions_made}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-green-900 mb-1">Participations</p>
-                    <p className="text-xs text-green-700">
-                      {formatCurrency(stats.total_contributed)} donnés
-                    </p>
-                  </div>
-
-                  {/* Badge */}
-                  <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100/30 rounded-xl border border-purple-100">
-                    <div className="flex items-center justify-between mb-2">
-                      <FiAward className="w-5 h-5 text-purple-600" />
-                      <span className="text-2xl">
-                        {stats.funds_created > 5 ? '🏆' : stats.contributions_made > 10 ? '⭐' : '🌱'}
-                      </span>
-                    </div>
-                    <p className="text-sm font-semibold text-purple-900 mb-1">
-                      {stats.funds_created > 5
-                        ? 'Créateur Gold'
-                        : stats.contributions_made > 10
-                        ? 'Contributeur Star'
-                        : 'Nouveau membre'}
-                    </p>
-                    <p className="text-xs text-purple-700">
-                      {stats.funds_created > 5
-                        ? 'Expert en cagnottes'
-                        : stats.contributions_made > 10
-                        ? 'Généreux donateur'
-                        : 'Bienvenue sur Qalby !'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Actions rapides */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Actions rapides</h2>
-              <div className="space-y-3">
-                <button
-                  onClick={() => navigate('/create-fund')}
-                  className="w-full py-3 bg-qalby-orange-500 text-white rounded-xl font-semibold hover:bg-qalby-orange-600 transition-all shadow-sm hover:shadow-md"
-                >
-                  Créer une cagnotte
-                </button>
-                <button
-                  onClick={() => navigate('/campaigns')}
-                  className="w-full py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-qalby-orange-500 hover:text-qalby-orange-600 transition-all"
-                >
-                  Découvrir des cagnottes
-                </button>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Navigation gauche */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-2">
+              <nav className="space-y-1">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        setIsEditing(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all ${
+                        activeTab === tab.id
+                          ? 'bg-qalby-orange-50 text-qalby-orange-700 font-semibold'
+                          : 'text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      <Icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-qalby-orange-600' : 'text-gray-400'}`} />
+                      <span className="text-sm">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
             </div>
           </div>
 
-          {/* Colonne droite - Informations personnelles */}
-          <div className="lg:col-span-2">
+          {/* Contenu à droite */}
+          <div className="lg:col-span-3">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <FiUser className="w-5 h-5 text-qalby-orange-500" />
-                Informations personnelles
-              </h2>
-
-              <div className="space-y-5">
-                {/* Prénom */}
+              {/* Mes cagnottes */}
+              {activeTab === 'funds' && stats && (
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Prénom
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      name="first_name"
-                      value={formData.first_name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
-                      placeholder="Votre prénom"
-                    />
-                  ) : (
-                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
-                      {profile.first_name || 'Non renseigné'}
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Mes cagnottes</h2>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100/30 rounded-xl border border-blue-100">
+                      <div className="flex items-center justify-between mb-3">
+                        <FiHeart className="w-6 h-6 text-blue-600" />
+                        <span className="text-3xl font-bold text-blue-900">{stats.funds_created}</span>
+                      </div>
+                      <p className="text-sm font-semibold text-blue-900 mb-1">Cagnottes créées</p>
+                      <p className="text-xs text-blue-700">
+                        {formatCurrency(stats.total_funds_amount)} collectés
+                      </p>
                     </div>
-                  )}
-                </div>
 
-                {/* Nom */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Nom
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      name="last_name"
-                      value={formData.last_name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
-                      placeholder="Votre nom"
-                    />
-                  ) : (
-                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
-                      {profile.last_name || 'Non renseigné'}
+                    <div className="p-6 bg-gradient-to-br from-green-50 to-green-100/30 rounded-xl border border-green-100">
+                      <div className="flex items-center justify-between mb-3">
+                        <FiHeart className="w-6 h-6 text-green-600" />
+                        <span className="text-3xl font-bold text-green-900">{stats.contributions_made}</span>
+                      </div>
+                      <p className="text-sm font-semibold text-green-900 mb-1">Participations</p>
+                      <p className="text-xs text-green-700">
+                        {formatCurrency(stats.total_contributed)} donnés
+                      </p>
                     </div>
-                  )}
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <FiMail className="w-4 h-4 text-gray-400" />
-                    Adresse email
-                  </label>
-                  <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
-                    {profile.email}
                   </div>
-                  <p className="text-xs text-gray-500 mt-1.5 ml-1">L'adresse email ne peut pas être modifiée</p>
-                </div>
 
-                {/* Téléphone */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <FiPhone className="w-4 h-4 text-gray-400" />
-                    Téléphone
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
-                      placeholder="+225 07 12 34 56 78"
-                    />
-                  ) : (
-                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
-                      {profile.phone || 'Non renseigné'}
-                    </div>
-                  )}
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => navigate('/create-fund')}
+                      className="w-full py-3 bg-qalby-orange-500 text-white rounded-xl font-semibold hover:bg-qalby-orange-600 transition-all shadow-sm hover:shadow-md"
+                    >
+                      Créer une nouvelle cagnotte
+                    </button>
+                    <button
+                      onClick={() => navigate('/campaigns')}
+                      className="w-full py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-qalby-orange-500 hover:text-qalby-orange-600 transition-all"
+                    >
+                      Découvrir des cagnottes
+                    </button>
+                  </div>
                 </div>
+              )}
 
-                {/* Nom d'utilisateur */}
+              {/* Mes informations */}
+              {activeTab === 'info' && (
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <FiGlobe className="w-4 h-4 text-gray-400" />
-                    Nom d'utilisateur
-                  </label>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
-                      placeholder="username"
-                    />
-                  ) : (
-                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
-                      {profile.username || 'Non renseigné'}
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900">Mes informations</h2>
+                    {!isEditing ? (
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-qalby-orange-50 text-qalby-orange-600 rounded-lg hover:bg-qalby-orange-100 transition-colors font-semibold text-sm"
+                      >
+                        <FiEdit2 className="w-4 h-4" />
+                        Modifier
+                      </button>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={handleCancel}
+                          disabled={isSaving}
+                          className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-semibold text-sm disabled:opacity-50"
+                        >
+                          <FiX className="w-4 h-4" />
+                          Annuler
+                        </button>
+                        <button
+                          onClick={handleSave}
+                          disabled={isSaving}
+                          className="flex items-center gap-2 px-4 py-2 bg-qalby-orange-500 text-white rounded-lg hover:bg-qalby-orange-600 transition-all font-semibold text-sm disabled:opacity-50"
+                        >
+                          {isSaving ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                              Enregistrement...
+                            </>
+                          ) : (
+                            <>
+                              <FiSave className="w-4 h-4" />
+                              Enregistrer
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-5">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Prénom</label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="first_name"
+                          value={formData.first_name}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
+                          placeholder="Votre prénom"
+                        />
+                      ) : (
+                        <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
+                          {profile.first_name || 'Non renseigné'}
+                        </div>
+                      )}
                     </div>
-                  )}
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Nom</label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="last_name"
+                          value={formData.last_name}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
+                          placeholder="Votre nom"
+                        />
+                      ) : (
+                        <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
+                          {profile.last_name || 'Non renseigné'}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <FiMail className="w-4 h-4 text-gray-400" />
+                        Adresse email
+                      </label>
+                      <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
+                        {profile.email}
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1.5 ml-1">L'adresse email ne peut pas être modifiée</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <FiPhone className="w-4 h-4 text-gray-400" />
+                        Téléphone
+                      </label>
+                      {isEditing ? (
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
+                          placeholder="+225 07 12 34 56 78"
+                        />
+                      ) : (
+                        <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
+                          {profile.phone || 'Non renseigné'}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <FiGlobe className="w-4 h-4 text-gray-400" />
+                        Nom d'utilisateur
+                      </label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="username"
+                          value={formData.username}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
+                          placeholder="username"
+                        />
+                      ) : (
+                        <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
+                          {profile.username || 'Non renseigné'}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Sécurité */}
+              {activeTab === 'security' && (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Sécurité</h2>
+                  <div className="text-center py-12">
+                    <FiLock className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">Section en cours de développement</p>
+                    <p className="text-sm text-gray-400 mt-2">Changement de mot de passe et authentification à deux facteurs</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Document d'identité */}
+              {activeTab === 'identity' && (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Document d'identité</h2>
+                  <div className="text-center py-12">
+                    <FiFileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">Section en cours de développement</p>
+                    <p className="text-sm text-gray-400 mt-2">Vérification d'identité et documents</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Préférences de communication */}
+              {activeTab === 'communication' && (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Préférences de communication</h2>
+                  <div className="text-center py-12">
+                    <FiBell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">Section en cours de développement</p>
+                    <p className="text-sm text-gray-400 mt-2">Gestion des notifications et emails</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
