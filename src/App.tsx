@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { HomePage } from './features/home/HomePage';
 import { Login } from './features/users/Login';
 import { Register } from './features/users/Register';
+import { ProfilePage } from './features/users/ProfilePage';
 import { CampaignPage } from './features/funds/CampaignPage';
 import { CreateFund } from './features/funds/CreateFund';
 import { ExploreFunds } from './features/funds/ExploreFunds';
@@ -19,6 +20,16 @@ function App() {
       {/* Routes d'authentification */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      
+      {/* Route profil - Protégée */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Routes des cagnottes */}
       <Route path="/campaigns" element={<ExploreFunds />} />
