@@ -8,7 +8,7 @@ import {
   getFundContributors,
   clearFund,
 } from '../../store/slices/fundSlice';
-import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward, FiGift, FiCrown } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward, FiGift, FiAlertCircle } from 'react-icons/fi';
 import { useCategories } from '../../hooks/useCategories';
 import { CreatorBanner } from './components/CreatorBanner';
 
@@ -62,7 +62,7 @@ export const CampaignPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">⚠️</span>
+            <FiAlertCircle className="w-12 h-12 text-red-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Erreur</h2>
           <p className="text-gray-600 mb-6">{error}</p>
@@ -424,7 +424,7 @@ export const CampaignPage = () => {
                             </div>
                             {index === 0 && (
                               <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
-                                <FiCrown className="w-3.5 h-3.5 text-yellow-900" />
+                                <FiAward className="w-3.5 h-3.5 text-yellow-900" />
                               </div>
                             )}
                           </div>

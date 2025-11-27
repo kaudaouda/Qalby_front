@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { FiArrowLeft, FiPhone, FiMessageSquare, FiCheck, FiAlertCircle, FiPlus, FiMinus } from 'react-icons/fi';
+import { FiArrowLeft, FiPhone, FiMessageSquare, FiCheck, FiAlertCircle, FiPlus, FiMinus, FiGift } from 'react-icons/fi';
 import { paymentService, type PaymentInitiationData } from '../../services/paymentService';
 import { fundService } from '../../services/fundService';
 import type { Fund } from '../../types';
@@ -220,7 +220,7 @@ export const PaymentPage = () => {
                 />
               ) : (
                 <div className="w-20 h-20 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center ring-4 ring-white/30 shadow-lg">
-                  <span className="text-3xl">💝</span>
+                  <FiGift className="w-5 h-5 text-white" />
                 </div>
               )}
               <div className="flex-1">
