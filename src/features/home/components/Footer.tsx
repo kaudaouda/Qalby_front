@@ -117,7 +117,7 @@ export const Footer = () => {
               <li className="flex items-start space-x-3">
                 <FiPhone className="w-5 h-5 text-qalby-orange-400 mt-0.5 flex-shrink-0" />
                 <a href="tel:+221771234567" className="hover:text-qalby-orange-400 transition-colors">
-                  +221 77 123 45 67
+                  +225 77 123 45 67
                 </a>
               </li>
               <li className="flex items-start space-x-3">

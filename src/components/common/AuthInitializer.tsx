@@ -10,14 +10,11 @@ export const AuthInitializer = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // Vérifier si un indicateur de session existe
-    // (Les cookies HTTP-only ne sont pas accessibles en JS)
-    const hasSession = localStorage.getItem('hasSession');
-    
-    if (hasSession === 'true') {
-      // Tenter de récupérer l'utilisateur si une session pourrait exister
-      dispatch(getCurrentUser());
-    }
+    // Toujours tenter de récupérer l'utilisateur au chargement
+    // Les cookies HTTP-only seront automatiquement envoyés par le navigateur
+    // Si les cookies n'existent pas ou sont invalides, l'API retournera 401
+    // et le state sera mis à jour en conséquence
+    dispatch(getCurrentUser());
   }, [dispatch]);
 
   return null; // Ce composant ne rend rien

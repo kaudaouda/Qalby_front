@@ -44,6 +44,45 @@ export interface Fund {
   days_remaining: number;
 }
 
+// Fund Detail (with statistics)
+export interface FundDetail extends Fund {
+  contributors_count: number;
+  average_contribution: number;
+  total_contributions: number;
+  latest_contributions: LatestContribution[];
+}
+
+// Latest Contribution
+export interface LatestContribution {
+  id: string;
+  contributor_name: string;
+  contributor_email?: string;
+  amount: number;
+  message?: string;
+  created_at: string;
+  is_anonymous: boolean;
+}
+
+// Fund Statistics
+export interface FundStatistics {
+  total_contributions: number;
+  total_amount: number;
+  goal_amount: number;
+  progress_percentage: number;
+  contributors_count: number;
+  average_contribution: number;
+  max_contribution: number;
+  min_contribution: number;
+  days_remaining: number;
+}
+
+// Contributor
+export interface Contributor {
+  user: User;
+  total_contributed: number;
+  contributions_count: number;
+}
+
 // Contribution types
 export interface Contribution {
   id: string;
