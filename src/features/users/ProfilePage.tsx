@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { FiUser, FiMail, FiPhone, FiGlobe, FiEdit2, FiSave, FiX, FiCamera, FiHeart, FiTrendingUp, FiAward, FiCalendar } from 'react-icons/fi';
+import { FiUser, FiMail, FiPhone, FiGlobe, FiEdit2, FiSave, FiX, FiCamera, FiHeart, FiTrendingUp, FiAward, FiCalendar, FiDollarSign } from 'react-icons/fi';
 import { authService } from '../../services/authService';
 import { toast } from 'react-toastify';
 
@@ -173,9 +173,29 @@ export const ProfilePage = () => {
     });
   };
 
+  const getInitials = () => {
+    if (profile?.first_name && profile?.last_name) {
+      return `${profile.first_name[0]}${profile.last_name[0]}`.toUpperCase();
+    }
+    if (profile?.first_name) {
+      return profile.first_name.substring(0, 2).toUpperCase();
+    }
+    if (profile?.email) {
+      return profile.email.substring(0, 2).toUpperCase();
+    }
+    return 'US';
+  };
+
+  const getFullName = () => {
+    if (profile?.first_name && profile?.last_name) {
+      return `${profile.first_name} ${profile.last_name}`;
+    }
+    return profile?.email || 'Utilisateur';
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="w-16 h-16 border-4 border-qalby-orange-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -183,7 +203,7 @@ export const ProfilePage = () => {
 
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <p className="text-gray-600 text-lg">Impossible de charger le profil</p>
           <button
@@ -198,27 +218,24 @@ export const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header avec bannière */}
-        <div className="relative h-64 bg-gradient-to-r from-qalby-orange-500 via-orange-600 to-purple-600 rounded-3xl shadow-2xl overflow-hidden mb-8">
-          <div className="absolute inset-0 bg-black/10"></div>
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNwYXR0ZXJuKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')] opacity-30"></div>
-          
-          {/* Avatar et infos de base */}
-          <div className="absolute -bottom-20 left-8 flex items-end gap-6">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header simplifié */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            {/* Avatar */}
             <div className="relative group">
-              <div className="w-40 h-40 rounded-3xl overflow-hidden ring-8 ring-white shadow-2xl bg-white">
+              <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-white shadow-xl bg-gradient-to-br from-qalby-orange-400 to-qalby-orange-600">
                 {avatarPreview ? (
                   <img
                     src={avatarPreview}
-                    alt={`${profile.first_name} ${profile.last_name}`}
+                    alt={getFullName()}
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-qalby-orange-400 to-qalby-orange-600 flex items-center justify-center">
-                    <span className="text-6xl font-bold text-white">
-                      {profile.first_name?.[0]?.toUpperCase() || profile.email?.[0]?.toUpperCase()}
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-5xl font-bold text-white drop-shadow-lg">
+                      {getInitials()}
                     </span>
                   </div>
                 )}
@@ -226,9 +243,12 @@ export const ProfilePage = () => {
               {isEditing && (
                 <label
                   htmlFor="avatar-upload"
-                  className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-3xl cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 >
-                  <FiCamera className="w-12 h-12 text-white" />
+                  <div className="text-center">
+                    <FiCamera className="w-8 h-8 text-white mx-auto mb-1" />
+                    <span className="text-xs text-white font-medium">Modifier</span>
+                  </div>
                   <input
                     id="avatar-upload"
                     type="file"
@@ -239,61 +259,167 @@ export const ProfilePage = () => {
                 </label>
               )}
             </div>
-          </div>
-        </div>
 
-        {/* Contenu principal */}
-        <div className="mt-24 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Colonne gauche - Informations personnelles */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Carte d'informations */}
-            <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Informations personnelles</h2>
-                {!isEditing ? (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-qalby-orange-50 text-qalby-orange-600 rounded-xl hover:bg-qalby-orange-100 transition-colors font-semibold"
-                  >
-                    <FiEdit2 className="w-4 h-4" />
-                    Modifier
-                  </button>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={handleCancel}
-                      disabled={isSaving}
-                      className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-semibold disabled:opacity-50"
-                    >
-                      <FiX className="w-4 h-4" />
-                      Annuler
-                    </button>
-                    <button
-                      onClick={handleSave}
-                      disabled={isSaving}
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white rounded-xl hover:from-qalby-orange-600 hover:to-qalby-orange-700 transition-colors font-semibold disabled:opacity-50"
-                    >
-                      {isSaving ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          Enregistrement...
-                        </>
-                      ) : (
-                        <>
-                          <FiSave className="w-4 h-4" />
-                          Enregistrer
-                        </>
-                      )}
-                    </button>
-                  </div>
+            {/* Infos principales */}
+            <div className="flex-1 text-center sm:text-left">
+              <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                {getFullName()}
+              </h1>
+              <p className="text-gray-600 mb-3">{profile.email}</p>
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                  <FiCalendar className="w-4 h-4" />
+                  Membre depuis {new Date(profile.date_joined).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+                </span>
+                {profile.verified && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    Vérifié
+                  </span>
                 )}
               </div>
+            </div>
 
-              <div className="space-y-6">
+            {/* Bouton d'édition */}
+            {!isEditing ? (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="flex items-center gap-2 px-6 py-3 bg-qalby-orange-500 text-white rounded-lg hover:bg-qalby-orange-600 transition-all shadow-md hover:shadow-lg font-medium"
+              >
+                <FiEdit2 className="w-4 h-4" />
+                Modifier le profil
+              </button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleCancel}
+                  disabled={isSaving}
+                  className="flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all font-medium disabled:opacity-50"
+                >
+                  <FiX className="w-4 h-4" />
+                  Annuler
+                </button>
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="flex items-center gap-2 px-6 py-3 bg-qalby-orange-500 text-white rounded-lg hover:bg-qalby-orange-600 transition-all shadow-md hover:shadow-lg font-medium disabled:opacity-50"
+                >
+                  {isSaving ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Enregistrement...
+                    </>
+                  ) : (
+                    <>
+                      <FiSave className="w-4 h-4" />
+                      Enregistrer
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Contenu principal */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Colonne gauche - Statistiques */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Statistiques */}
+            {stats && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <FiTrendingUp className="w-5 h-5 text-qalby-orange-500" />
+                  Mes statistiques
+                </h2>
+                <div className="space-y-4">
+                  {/* Cagnottes créées */}
+                  <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100/30 rounded-xl border border-blue-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <FiHeart className="w-5 h-5 text-blue-600" />
+                      <span className="text-2xl font-bold text-blue-900">{stats.funds_created}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-blue-900 mb-1">Cagnottes créées</p>
+                    <p className="text-xs text-blue-700">
+                      {formatCurrency(stats.total_funds_amount)} collectés
+                    </p>
+                  </div>
+
+                  {/* Contributions */}
+                  <div className="p-4 bg-gradient-to-br from-green-50 to-green-100/30 rounded-xl border border-green-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <FiDollarSign className="w-5 h-5 text-green-600" />
+                      <span className="text-2xl font-bold text-green-900">{stats.contributions_made}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-green-900 mb-1">Participations</p>
+                    <p className="text-xs text-green-700">
+                      {formatCurrency(stats.total_contributed)} donnés
+                    </p>
+                  </div>
+
+                  {/* Badge */}
+                  <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100/30 rounded-xl border border-purple-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <FiAward className="w-5 h-5 text-purple-600" />
+                      <span className="text-2xl">
+                        {stats.funds_created > 5 ? '🏆' : stats.contributions_made > 10 ? '⭐' : '🌱'}
+                      </span>
+                    </div>
+                    <p className="text-sm font-semibold text-purple-900 mb-1">
+                      {stats.funds_created > 5
+                        ? 'Créateur Gold'
+                        : stats.contributions_made > 10
+                        ? 'Contributeur Star'
+                        : 'Nouveau membre'}
+                    </p>
+                    <p className="text-xs text-purple-700">
+                      {stats.funds_created > 5
+                        ? 'Expert en cagnottes'
+                        : stats.contributions_made > 10
+                        ? 'Généreux donateur'
+                        : 'Bienvenue sur Qalby !'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Actions rapides */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Actions rapides</h2>
+              <div className="space-y-3">
+                <button
+                  onClick={() => navigate('/create-fund')}
+                  className="w-full py-3 bg-qalby-orange-500 text-white rounded-xl font-semibold hover:bg-qalby-orange-600 transition-all shadow-sm hover:shadow-md"
+                >
+                  Créer une cagnotte
+                </button>
+                <button
+                  onClick={() => navigate('/campaigns')}
+                  className="w-full py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-qalby-orange-500 hover:text-qalby-orange-600 transition-all"
+                >
+                  Découvrir des cagnottes
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Colonne droite - Informations personnelles */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <FiUser className="w-5 h-5 text-qalby-orange-500" />
+                Informations personnelles
+              </h2>
+
+              <div className="space-y-5">
                 {/* Prénom */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <FiUser className="w-4 h-4 text-qalby-orange-500" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Prénom
                   </label>
                   {isEditing ? (
@@ -302,20 +428,19 @@ export const ProfilePage = () => {
                       name="first_name"
                       value={formData.first_name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
                       placeholder="Votre prénom"
                     />
                   ) : (
-                    <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900 font-medium">
+                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
                       {profile.first_name || 'Non renseigné'}
-                    </p>
+                    </div>
                   )}
                 </div>
 
                 {/* Nom */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <FiUser className="w-4 h-4 text-qalby-orange-500" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Nom
                   </label>
                   {isEditing ? (
@@ -324,32 +449,32 @@ export const ProfilePage = () => {
                       name="last_name"
                       value={formData.last_name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
                       placeholder="Votre nom"
                     />
                   ) : (
-                    <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900 font-medium">
+                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
                       {profile.last_name || 'Non renseigné'}
-                    </p>
+                    </div>
                   )}
                 </div>
 
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <FiMail className="w-4 h-4 text-qalby-orange-500" />
-                    Email
+                    <FiMail className="w-4 h-4 text-gray-400" />
+                    Adresse email
                   </label>
-                  <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900 font-medium">
+                  <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
                     {profile.email}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1 ml-1">L'email ne peut pas être modifié</p>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1.5 ml-1">L'adresse email ne peut pas être modifiée</p>
                 </div>
 
                 {/* Téléphone */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <FiPhone className="w-4 h-4 text-qalby-orange-500" />
+                    <FiPhone className="w-4 h-4 text-gray-400" />
                     Téléphone
                   </label>
                   {isEditing ? (
@@ -358,20 +483,20 @@ export const ProfilePage = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
                       placeholder="+225 07 12 34 56 78"
                     />
                   ) : (
-                    <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900 font-medium">
+                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
                       {profile.phone || 'Non renseigné'}
-                    </p>
+                    </div>
                   )}
                 </div>
 
                 {/* Nom d'utilisateur */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <FiGlobe className="w-4 h-4 text-qalby-orange-500" />
+                    <FiGlobe className="w-4 h-4 text-gray-400" />
                     Nom d'utilisateur
                   </label>
                   {isEditing ? (
@@ -380,100 +505,15 @@ export const ProfilePage = () => {
                       name="username"
                       value={formData.username}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 transition-colors"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-qalby-orange-500 focus:border-transparent transition-all"
                       placeholder="username"
                     />
                   ) : (
-                    <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900 font-medium">
+                    <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 font-medium border border-gray-200">
                       {profile.username || 'Non renseigné'}
-                    </p>
+                    </div>
                   )}
                 </div>
-
-                {/* Date d'inscription */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <FiCalendar className="w-4 h-4 text-qalby-orange-500" />
-                    Membre depuis
-                  </label>
-                  <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-900 font-medium">
-                    {formatDate(profile.date_joined)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Colonne droite - Statistiques */}
-          <div className="lg:col-span-1 space-y-8">
-            {/* Statistiques */}
-            {stats && (
-              <div className="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Mes statistiques</h2>
-                <div className="space-y-4">
-                  {/* Cagnottes créées */}
-                  <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <FiHeart className="w-6 h-6 text-blue-600" />
-                      <span className="text-3xl font-bold text-blue-900">{stats.funds_created}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-blue-800">Cagnottes créées</p>
-                    <p className="text-xs text-blue-600 mt-1">
-                      Total: {formatCurrency(stats.total_funds_amount)}
-                    </p>
-                  </div>
-
-                  {/* Contributions */}
-                  <div className="p-4 bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <FiTrendingUp className="w-6 h-6 text-green-600" />
-                      <span className="text-3xl font-bold text-green-900">{stats.contributions_made}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-green-800">Contributions</p>
-                    <p className="text-xs text-green-600 mt-1">
-                      Total: {formatCurrency(stats.total_contributed)}
-                    </p>
-                  </div>
-
-                  {/* Badge */}
-                  <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-2xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <FiAward className="w-6 h-6 text-purple-600" />
-                      <span className="text-2xl font-bold text-purple-900">
-                        {stats.funds_created > 5 ? '🏆' : stats.contributions_made > 10 ? '⭐' : '🌱'}
-                      </span>
-                    </div>
-                    <p className="text-sm font-semibold text-purple-800">
-                      {stats.funds_created > 5
-                        ? 'Créateur Gold'
-                        : stats.contributions_made > 10
-                        ? 'Contributeur Star'
-                        : 'Nouveau membre'}
-                    </p>
-                    <p className="text-xs text-purple-600 mt-1">
-                      Continuez à contribuer !
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Actions rapides */}
-            <div className="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Actions rapides</h2>
-              <div className="space-y-3">
-                <button
-                  onClick={() => navigate('/create-fund')}
-                  className="w-full py-3 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white rounded-xl font-semibold hover:from-qalby-orange-600 hover:to-qalby-orange-700 transition-all shadow-lg hover:shadow-xl"
-                >
-                  Créer une cagnotte
-                </button>
-                <button
-                  onClick={() => navigate('/campaigns')}
-                  className="w-full py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-qalby-orange-500 hover:text-qalby-orange-600 transition-all"
-                >
-                  Explorer les cagnottes
-                </button>
               </div>
             </div>
           </div>
@@ -482,4 +522,3 @@ export const ProfilePage = () => {
     </div>
   );
 };
-
