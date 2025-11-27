@@ -265,8 +265,7 @@ export const PaymentPage = () => {
                           className="w-12 h-12 object-contain rounded-lg"
                         />
                         <div className="text-left">
-                          <p className="font-semibold text-gray-900 text-sm">{provider.name}</p>
-                          <p className="text-xs text-gray-500">{provider.prefixes.join(', ')}</p>
+                          <p className="font-semibold text-gray-900">{provider.name}</p>
                         </div>
                       </button>
                     ))}
