@@ -12,8 +12,12 @@ interface ReviewStepProps {
 export const ReviewStep = ({ formData, onSubmit, onBack, isSubmitting, error }: ReviewStepProps) => {
   const { categories } = useCategories();
   
+  const getCategory = (value: string) => {
+    return categories.find(cat => cat.value === value);
+  };
+  
   const getCategoryLabel = (value: string) => {
-    return categories.find(cat => cat.value === value)?.label || value;
+    return getCategory(value)?.label || value;
   };
   
   const formatDate = (dateString: string) => {
@@ -46,13 +50,23 @@ export const ReviewStep = ({ formData, onSubmit, onBack, isSubmitting, error }: 
       {/* Aperçu de la cagnotte */}
       <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden">
         {/* Image */}
-        {formData.image && (
+        {formData.image ? (
           <div className="aspect-video bg-gray-100">
             <img
               src={URL.createObjectURL(formData.image)}
               alt={formData.title}
               className="w-full h-full object-cover"
             />
+          </div>
+        ) : (
+          <div className="aspect-video bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+            {(() => {
+              const category = getCategory(formData.category);
+              const IconComponent = category?.icon;
+              return IconComponent ? (
+                <IconComponent className="text-6xl text-primary-600" />
+              ) : null;
+            })()}
           </div>
         )}
 
@@ -61,7 +75,14 @@ export const ReviewStep = ({ formData, onSubmit, onBack, isSubmitting, error }: 
           {/* Titre et catégorie */}
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full">
+              <span className="px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full flex items-center gap-2">
+                {(() => {
+                  const category = getCategory(formData.category);
+                  const IconComponent = category?.icon;
+                  return IconComponent ? (
+                    <IconComponent className="text-base" />
+                  ) : null;
+                })()}
                 {getCategoryLabel(formData.category)}
               </span>
               <span className={`
