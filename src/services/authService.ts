@@ -32,22 +32,34 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    console.log('[AUTH-INTERCEPTOR] Erreur détectée:', {
+      status: error.response?.status,
+      url: originalRequest?.url,
+      hasRetried: originalRequest?._retry
+    });
+
     // Si c'est une erreur 401 sur /me, ne pas afficher d'erreur (utilisateur non connecté)
     if (error.response?.status === 401 && originalRequest?.url?.includes('/me/')) {
+      console.log('[AUTH-INTERCEPTOR] 401 sur /me/ - Utilisateur non connecté (normal)');
       return Promise.reject(error);
     }
 
     // Si c'est une erreur 401 et qu'on n'a pas encore essayé de refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
+      console.log('[AUTH-INTERCEPTOR] 401 détecté, tentative de refresh du token...');
+      
       if (isRefreshing) {
+        console.log('[AUTH-INTERCEPTOR] Refresh déjà en cours, ajout à la queue');
         // Si un refresh est déjà en cours, ajouter à la queue
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
           .then(() => {
+            console.log('[AUTH-INTERCEPTOR] Refresh terminé, réessai de la requête');
             return axiosInstance(originalRequest);
           })
           .catch((err) => {
+            console.error('[AUTH-INTERCEPTOR] Erreur après refresh:', err);
             return Promise.reject(err);
           });
       }
@@ -56,19 +68,28 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
+        console.log('[AUTH-INTERCEPTOR] Appel de /api/users/refresh/...');
         // Appeler l'endpoint de refresh
         await axiosInstance.post(API_ENDPOINTS.REFRESH_TOKEN);
+        console.log('[AUTH-INTERCEPTOR] ✅ Token rafraîchi avec succès !');
+        
         processQueue(null, null);
         isRefreshing = false;
+        
         // Réessayer la requête originale
+        console.log('[AUTH-INTERCEPTOR] Réessai de la requête originale...');
         return axiosInstance(originalRequest);
       } catch (refreshError) {
+        console.error('[AUTH-INTERCEPTOR] ❌ Échec du refresh:', refreshError);
         processQueue(refreshError, null);
         isRefreshing = false;
+        
         // Le refresh a échoué, supprimer la session
         localStorage.removeItem('hasSession');
+        
         // Rediriger vers login si nécessaire
         if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
+          console.log('[AUTH-INTERCEPTOR] Redirection vers /login');
           window.location.href = '/login';
         }
         return Promise.reject(refreshError);
