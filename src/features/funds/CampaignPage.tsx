@@ -201,13 +201,13 @@ export const CampaignPage = () => {
             {/* Barre de progression */}
             <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
               <div className="mb-6">
-                <div className="flex items-baseline justify-between mb-3">
+                <div className="flex items-baseline justify-between mb-6">
                   <div>
                     <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Collecté</p>
                     <span className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-qalby-orange-600 to-qalby-orange-500 bg-clip-text text-transparent">
                       {formatCurrency(currentFund.current_amount)} FCFA
-                  </span>
-                </div>
+                    </span>
+                  </div>
                   <div className="text-right">
                     <p className="text-sm font-medium text-gray-500">Objectif</p>
                     <p className="text-lg font-semibold text-gray-700">
@@ -217,7 +217,7 @@ export const CampaignPage = () => {
                 </div>
                 
                 {/* Barre de progression améliorée */}
-                <div className="relative">
+                <div className="relative mt-8">
                   <div className="w-full bg-gray-100 rounded-full h-5 shadow-inner">
                     <div
                       className="bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 h-5 rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
