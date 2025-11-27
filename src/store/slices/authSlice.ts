@@ -132,31 +132,35 @@ const authSlice = createSlice({
     builder
       .addCase(getCurrentUser.pending, (state) => {
         state.isLoading = true;
+        console.log('[REDUX] 🔄 getCurrentUser en cours...');
       })
       .addCase(getCurrentUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
+        state.error = null;
         // Confirmer que la session existe
         localStorage.setItem('hasSession', 'true');
         console.log('[REDUX] ✅ Utilisateur authentifié:', action.payload.email);
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
-        state.isLoading = false;
+        // NE PAS mettre isLoading = false immédiatement
+        // Car l'intercepteur est peut-être en train de refresh le token
         
-        // NE PAS déconnecter si c'est juste un token expiré qui sera rafraîchi
-        // L'intercepteur axios va gérer le refresh automatiquement
-        // On ne déconnecte que si hasSession n'existe pas (vraiment déconnecté)
         const hasSession = localStorage.getItem('hasSession');
         
         if (!hasSession) {
           console.log('[REDUX] ❌ Pas de session, déconnexion');
+          state.isLoading = false;
           state.isAuthenticated = false;
           state.user = null;
+          localStorage.removeItem('hasSession');
         } else {
           console.log('[REDUX] ⚠️ Erreur getCurrentUser mais session existe, on garde la connexion');
-          // Garder isAuthenticated = true si on avait une session
-          // L'intercepteur va rafraîchir le token
+          // Garder isLoading = true pour éviter la redirection pendant le refresh
+          // L'intercepteur va réessayer et on aura un nouveau fulfilled ou rejected
+          state.isLoading = true; // IMPORTANT : Garder le loading actif
+          // Ne pas changer isAuthenticated, on garde l'état précédent
         }
       });
   },
