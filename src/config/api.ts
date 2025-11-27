@@ -1,4 +1,4 @@
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export const API_ENDPOINTS = {
   // Auth
@@ -14,6 +14,10 @@ export const API_ENDPOINTS = {
 
   // Funds
   FUNDS: '/api/funds/',
+  FUND_DETAIL: (id: string) => `/api/funds/${id}/`,
+  FUND_STATISTICS: (id: string) => `/api/funds/${id}/statistics/`,
+  FUND_CONTRIBUTIONS: (id: string) => `/api/funds/${id}/contributions/`,
+  FUND_CONTRIBUTORS: (id: string) => `/api/funds/${id}/contributors/`,
   MY_FUNDS: '/api/funds/my_funds/',
 
   // Contributions
