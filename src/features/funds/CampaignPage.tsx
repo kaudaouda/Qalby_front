@@ -104,6 +104,9 @@ export const CampaignPage = () => {
 
   const CategoryIcon = getCategoryIcon(currentFund.category);
   const progressPercentage = Math.min(currentFund.progress_percentage, 100);
+  
+  // Vérifier si l'utilisateur est le créateur de la cagnotte
+  const isCreator = user && currentFund.creator?.id === user.id;
 
   const handleShare = () => {
     if (navigator.share) {
@@ -125,6 +128,23 @@ export const CampaignPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      {/* Bannière pour le créateur */}
+      {isCreator && (
+        <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 px-6 shadow-lg">
+          <div className="max-w-7xl mx-auto flex items-center gap-3">
+            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+              <FiInfo className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="font-bold text-lg">Votre cagnotte</p>
+              <p className="text-sm text-white/90">
+                Vous êtes le créateur de cette cagnotte. Partagez-la pour recevoir plus de contributions !
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Header avec image */}
       <div className="relative h-72 md:h-96 overflow-hidden">
         {currentFund.image ? (
@@ -227,8 +247,8 @@ export const CampaignPage = () => {
                     <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Collecté</p>
                     <span className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-qalby-orange-600 to-qalby-orange-500 bg-clip-text text-transparent">
                       {formatCurrency(currentFund.current_amount)} FCFA
-                    </span>
-                  </div>
+                  </span>
+                </div>
                   <div className="text-right">
                     <p className="text-sm font-medium text-gray-500">Objectif</p>
                     <p className="text-lg font-semibold text-gray-700">
