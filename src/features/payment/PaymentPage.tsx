@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { FiArrowLeft, FiPhone, FiDollarSign, FiMessageSquare, FiCheck, FiAlertCircle } from 'react-icons/fi';
+import { FiArrowLeft, FiPhone, FiMessageSquare, FiCheck, FiAlertCircle, FiPlus, FiMinus } from 'react-icons/fi';
 import { paymentService, type PaymentInitiationData } from '../../services/paymentService';
 import { fundService } from '../../services/fundService';
 import type { Fund } from '../../types';
@@ -286,24 +286,48 @@ export const PaymentPage = () => {
                     Montant à contribuer
                   </label>
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2">
-                      <FiDollarSign className="w-5 h-5 text-gray-400" />
-                    </div>
+                    {/* Bouton moins */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const currentAmount = parseFloat(amount) || 0;
+                        const newAmount = Math.max(0, currentAmount - 100);
+                        setAmount(newAmount.toString());
+                      }}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 hover:from-qalby-orange-100 hover:to-purple-100 rounded-lg flex items-center justify-center transition-all hover:scale-110 hover:shadow-md z-10"
+                    >
+                      <FiMinus className="w-5 h-5 text-gray-600" />
+                    </button>
+                    
                     <input
                       type="number"
                       id="amount"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="1000"
-                      min="1"
-                      className="w-full pl-12 pr-24 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 focus:ring-4 focus:ring-qalby-orange-100 transition-all text-lg font-semibold"
+                      min="0"
+                      className="w-full px-16 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 focus:ring-4 focus:ring-qalby-orange-100 transition-all text-lg font-bold text-center"
                     />
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">
-                      F CFA
-                    </div>
+                    
+                    {/* Bouton plus */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const currentAmount = parseFloat(amount) || 0;
+                        setAmount((currentAmount + 100).toString());
+                      }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-gradient-to-br from-qalby-orange-500 to-purple-600 hover:from-qalby-orange-600 hover:to-purple-700 rounded-lg flex items-center justify-center transition-all hover:scale-110 hover:shadow-lg z-10"
+                    >
+                      <FiPlus className="w-5 h-5 text-white" />
+                    </button>
                   </div>
+                  
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    Utilisez les boutons +/- pour ajuster le montant par tranche de 100 F CFA
+                  </p>
+                  
                   {/* Suggestions de montant */}
-                  <div className="flex gap-2 mt-3">
+                  <div className="flex gap-2 mt-3 flex-wrap">
                     {[500, 1000, 2000, 5000, 10000].map((val) => (
                       <button
                         key={val}
