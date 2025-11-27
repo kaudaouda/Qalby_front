@@ -8,8 +8,9 @@ import {
   getFundContributors,
   clearFund,
 } from '../../store/slices/fundSlice';
-import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward, FiInfo } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward } from 'react-icons/fi';
 import { useCategories } from '../../hooks/useCategories';
+import { CreatorBanner } from './components/CreatorBanner';
 
 export const CampaignPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -129,21 +130,7 @@ export const CampaignPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       {/* Bannière pour le créateur */}
-      {isCreator && (
-        <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 px-6 shadow-lg">
-          <div className="max-w-7xl mx-auto flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-              <FiInfo className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="font-bold text-lg">Votre cagnotte</p>
-              <p className="text-sm text-white/90">
-                Vous êtes le créateur de cette cagnotte. Partagez-la pour recevoir plus de contributions !
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      <CreatorBanner isVisible={isCreator} />
       
       {/* Header avec image */}
       <div className="relative h-72 md:h-96 overflow-hidden">
