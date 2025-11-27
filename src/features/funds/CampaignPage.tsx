@@ -266,37 +266,31 @@ export const CampaignPage = () => {
             </div>
           </div>
 
-          {/* Colonne latérale - Formulaire de contribution */}
+          {/* Colonne latérale - Actions */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 sticky top-8">
               <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-                Contribuer maintenant
+                Soutenir ce projet
               </h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Montant (FCFA)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="1000"
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Message (optionnel)
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="Laissez un message de soutien..."
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  ></textarea>
-                </div>
-                <button className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors">
-                  Contribuer
+              <div className="space-y-3">
+                {/* Bouton Participer */}
+                <button className="w-full py-4 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                  <FiHeart className="w-5 h-5" />
+                  Participer
                 </button>
+                
+                {/* Bouton Partager */}
+                <button className="w-full py-4 bg-white border-2 border-neutral-200 text-neutral-700 rounded-xl font-semibold hover:border-primary-500 hover:text-primary-600 transition-all duration-300 flex items-center justify-center gap-2">
+                  <FiShare2 className="w-5 h-5" />
+                  Partager
+                </button>
+              </div>
+              
+              {/* Message d'encouragement */}
+              <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <p className="text-sm text-blue-800 text-center">
+                  Chaque contribution compte pour atteindre l'objectif !
+                </p>
               </div>
 
               {/* Contributeurs */}
