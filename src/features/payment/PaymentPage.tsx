@@ -246,15 +246,15 @@ export const PaymentPage = () => {
 
           {/* Contenu selon l'étape */}
           <div className="p-6 md:p-8">
-            {step === 'form' && (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Sélection de l'opérateur */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <span className="w-8 h-8 bg-gradient-to-br from-qalby-orange-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">1</span>
-                    Choisissez votre opérateur Mobile Money
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
+          {step === 'form' && (
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Étape 1: Sélection de l'opérateur */}
+              <div className="animate-fadeIn">
+                <label className="block text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <span className="w-8 h-8 bg-gradient-to-br from-qalby-orange-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">1</span>
+                  Choisissez votre opérateur Mobile Money
+                </label>
+                <div className="grid grid-cols-2 gap-3">
                     {PROVIDERS.map((provider) => (
                       <button
                         key={provider.id}
@@ -352,9 +352,11 @@ export const PaymentPage = () => {
                     </div>
                   </div>
                 </div>
+              )}
 
-                {/* Numéro de téléphone */}
-                <div>
+              {/* Étape 3: Numéro de téléphone (apparaît après avoir saisi le montant) */}
+              {selectedProvider && amount && parseFloat(amount) > 0 && (
+                <div className="animate-fadeIn">
                   <label htmlFor="phone" className="block text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
                     <span className="w-8 h-8 bg-gradient-to-br from-qalby-orange-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">3</span>
                     Votre numéro Mobile Money
@@ -388,9 +390,11 @@ export const PaymentPage = () => {
                     </div>
                   </details>
                 </div>
+              )}
 
-                {/* Message (optionnel) */}
-                <div>
+              {/* Étape 4: Message (apparaît après avoir saisi le numéro) */}
+              {selectedProvider && amount && parseFloat(amount) > 0 && phone && (
+                <div className="animate-fadeIn">
                   <label htmlFor="message" className="block text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
                     <span className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-500 rounded-lg flex items-center justify-center text-white text-sm">💬</span>
                     Message de soutien (optionnel)
@@ -413,17 +417,20 @@ export const PaymentPage = () => {
                     {message.length}/200
                   </p>
                 </div>
+              )}
 
-                {/* Erreur */}
-                {error && (
-                  <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
-                    <FiAlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-red-800">{error}</p>
-                  </div>
-                )}
+              {/* Erreur */}
+              {selectedProvider && amount && parseFloat(amount) > 0 && phone && (
+              <div className="animate-fadeIn">
+                  {error && (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+                      <FiAlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-red-800">{error}</p>
+                    </div>
+                  )}
 
-                {/* Info simulation */}
-                <div className="p-5 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 border-2 border-yellow-200 rounded-2xl">
+                  {/* Info simulation */}
+                  <div className="p-5 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 border-2 border-yellow-200 rounded-2xl">
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center flex-shrink-0 text-xl">
                       🧪
@@ -458,8 +465,10 @@ export const PaymentPage = () => {
                     </>
                   )}
                 </button>
-              </form>
-            )}
+              </div>
+              )}
+            </form>
+          )}
 
             {step === 'confirmation' && paymentData && (
               <div className="space-y-6">
