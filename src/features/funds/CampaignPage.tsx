@@ -8,7 +8,7 @@ import {
   getFundContributors,
   clearFund,
 } from '../../store/slices/fundSlice';
-import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward, FiGift, FiCrown } from 'react-icons/fi';
 import { useCategories } from '../../hooks/useCategories';
 import { CreatorBanner } from './components/CreatorBanner';
 
@@ -392,21 +392,22 @@ export const CampaignPage = () => {
               
               {/* Message d'encouragement */}
               <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
-                <p className="text-sm text-blue-900 text-center font-medium">
-                  💝 Chaque contribution compte pour atteindre l'objectif !
-                </p>
+                <div className="flex items-center justify-center gap-2">
+                  <FiGift className="w-5 h-5 text-blue-600" />
+                  <p className="text-sm text-blue-900 text-center font-medium">
+                    Chaque contribution compte pour atteindre l'objectif !
+                  </p>
+                </div>
               </div>
 
               {/* Contributeurs */}
               {contributors.length > 0 && (
                 <div className="mt-8 pt-6 border-t border-gray-100">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold text-gray-900">
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                     Top contributeurs
+                      <FiAward className="w-5 h-5 text-yellow-500" />
                   </h3>
-                    <span className="text-sm font-semibold text-qalby-orange-600">
-                      🏆
-                    </span>
                   </div>
                   <div className="space-y-3">
                     {contributors.slice(0, 5).map((contributor, index) => (
@@ -422,8 +423,8 @@ export const CampaignPage = () => {
                             </span>
                             </div>
                             {index === 0 && (
-                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center text-xs">
-                                👑
+                              <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+                                <FiCrown className="w-3.5 h-3.5 text-yellow-900" />
                               </div>
                             )}
                           </div>
