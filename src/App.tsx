@@ -5,6 +5,7 @@ import { Register } from './features/users/Register';
 import { CampaignPage } from './features/funds/CampaignPage';
 import { CreateFund } from './features/funds/CreateFund';
 import { ExploreFunds } from './features/funds/ExploreFunds';
+import { PaymentPage } from './features/payment/PaymentPage';
 import { AuthInitializer, ProtectedRoute } from './components/common';
 
 function App() {

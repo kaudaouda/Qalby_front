@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
@@ -10,14 +10,12 @@ import {
 } from '../../store/slices/fundSlice';
 import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward } from 'react-icons/fi';
 import { useCategories } from '../../hooks/useCategories';
-import { PaymentModal } from '../payment/PaymentModal';
 
 export const CampaignPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { categories } = useCategories();
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const {
     currentFund,
@@ -103,17 +101,6 @@ export const CampaignPage = () => {
 
   const CategoryIcon = getCategoryIcon(currentFund.category);
   const progressPercentage = Math.min(currentFund.progress_percentage, 100);
-
-  const handlePaymentSuccess = () => {
-    // Recharger les données après paiement réussi
-    if (id) {
-      dispatch(getFundDetail(id));
-      dispatch(getFundStatistics(id));
-      dispatch(getFundContributions({ id, page: 1 }));
-      dispatch(getFundContributors(id));
-    }
-    setIsPaymentModalOpen(false);
-  };
 
   const handleShare = () => {
     if (navigator.share) {
@@ -362,7 +349,7 @@ export const CampaignPage = () => {
               <div className="space-y-3">
                 {/* Bouton Participer */}
                 <button 
-                  onClick={() => setIsPaymentModalOpen(true)}
+                  onClick={() => navigate(`/payment/${id}`)}
                   className="w-full py-4 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white rounded-2xl font-bold hover:from-qalby-orange-600 hover:to-qalby-orange-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 transform"
                 >
                   <FiHeart className="w-5 h-5" />
@@ -437,15 +424,6 @@ export const CampaignPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Modal de paiement */}
-      <PaymentModal
-        isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
-        fundId={id!}
-        fundTitle={currentFund.title}
-        onSuccess={handlePaymentSuccess}
-      />
     </div>
   );
 };
