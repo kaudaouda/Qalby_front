@@ -19,6 +19,7 @@ export const API_ENDPOINTS = {
   FUND_CONTRIBUTIONS: (id: string) => `/api/funds/${id}/contributions/`,
   FUND_CONTRIBUTORS: (id: string) => `/api/funds/${id}/contributors/`,
   MY_FUNDS: '/api/funds/my_funds/',
+  FUND_CATEGORIES: '/api/funds/categories/',
 
   // Contributions
   CONTRIBUTIONS: '/api/contributions/',

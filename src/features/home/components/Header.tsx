@@ -24,24 +24,35 @@ export const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium">
+            <Link to="/#features" className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium">
               Fonctionnalités
-            </a>
-            <a href="#how-it-works" className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium">
+            </Link>
+            <Link to="/#how-it-works" className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium">
               Comment ça marche
-            </a>
-            <a href="#campaigns" className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium">
-              Cagnottes
-            </a>
-            <a href="#about" className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium">
+            </Link>
+            <Link to="/campaigns" className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium">
+              Découvrir
+            </Link>
+            <Link to="/#about" className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium">
               À propos
-            </a>
+            </Link>
           </nav>
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
-              <UserMenu />
+              <>
+                <Link
+                  to="/create-fund"
+                  className="bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300 font-medium flex items-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Créer une cagnotte
+                </Link>
+                <UserMenu />
+              </>
             ) : (
               <>
                 <Link
@@ -73,39 +84,51 @@ export const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-100">
             <nav className="flex flex-col space-y-4">
-              <a
-                href="#features"
+              <Link
+                to="/#features"
                 className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Fonctionnalités
-              </a>
-              <a
-                href="#how-it-works"
+              </Link>
+              <Link
+                to="/#how-it-works"
                 className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Comment ça marche
-              </a>
-              <a
-                href="#campaigns"
+              </Link>
+              <Link
+                to="/campaigns"
                 className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Cagnottes
-              </a>
-              <a
-                href="#about"
+                Découvrir
+              </Link>
+              <Link
+                to="/#about"
                 className="text-gray-700 hover:text-qalby-orange-600 transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 À propos
-              </a>
+              </Link>
               <div className="pt-4 flex flex-col space-y-3">
                 {isAuthenticated ? (
-                  <div className="px-4 flex justify-center">
-                    <UserMenu />
-                  </div>
+                  <>
+                    <Link
+                      to="/create-fund"
+                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Créer une cagnotte
+                    </Link>
+                    <div className="px-4 flex justify-center">
+                      <UserMenu />
+                    </div>
+                  </>
                 ) : (
                   <>
                     <Link

@@ -138,6 +138,14 @@ export const fundService = {
     const response = await axiosInstance.delete(API_ENDPOINTS.FUND_DETAIL(id));
     return response.data;
   },
+
+  /**
+   * Récupérer les catégories disponibles
+   */
+  async getCategories(): Promise<Array<{ value: string; label: string }>> {
+    const response = await axiosInstance.get(API_ENDPOINTS.FUND_CATEGORIES);
+    return response.data;
+  },
 };
 
 
