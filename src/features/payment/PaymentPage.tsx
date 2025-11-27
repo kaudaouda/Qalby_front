@@ -5,6 +5,12 @@ import { paymentService, type PaymentInitiationData } from '../../services/payme
 import { fundService } from '../../services/fundService';
 import type { Fund } from '../../types';
 
+// Import des logos des opérateurs
+import orangeLogo from '../../images/payment/orange.png';
+import mtnLogo from '../../images/payment/mtn.jpg';
+import moovLogo from '../../images/payment/moov.png';
+import waveLogo from '../../images/payment/wave.jpg';
+
 interface Provider {
   id: 'orange_money' | 'mtn_money' | 'moov_money' | 'wave';
   name: string;
@@ -17,28 +23,28 @@ const PROVIDERS: Provider[] = [
   {
     id: 'orange_money',
     name: 'Orange Money',
-    logo: '🟠',
+    logo: orangeLogo,
     color: '#FF7900',
     prefixes: ['07', '08', '09'],
   },
   {
     id: 'mtn_money',
     name: 'MTN Money',
-    logo: '🟡',
+    logo: mtnLogo,
     color: '#FFCC00',
     prefixes: ['05', '06'],
   },
   {
     id: 'moov_money',
     name: 'Moov Money',
-    logo: '🔵',
+    logo: moovLogo,
     color: '#0066CC',
     prefixes: ['01', '02', '03'],
   },
   {
     id: 'wave',
     name: 'Wave',
-    logo: '💙',
+    logo: waveLogo,
     color: '#4A90E2',
     prefixes: ['01', '02', '03', '05', '06', '07', '08', '09'],
   },
@@ -253,7 +259,11 @@ export const PaymentPage = () => {
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
-                        <span className="text-3xl">{provider.logo}</span>
+                        <img 
+                          src={provider.logo} 
+                          alt={provider.name}
+                          className="w-12 h-12 object-contain rounded-lg"
+                        />
                         <div className="text-left">
                           <p className="font-semibold text-gray-900 text-sm">{provider.name}</p>
                           <p className="text-xs text-gray-500">{provider.prefixes.join(', ')}</p>
