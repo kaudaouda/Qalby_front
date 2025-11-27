@@ -107,7 +107,7 @@ export const CampaignPage = () => {
   const progressPercentage = Math.min(currentFund.progress_percentage, 100);
   
   // Vérifier si l'utilisateur est le créateur de la cagnotte
-  const isCreator = user && currentFund.creator?.id === user.id;
+  const isCreator = Boolean(user && currentFund.creator?.id === user.id);
 
   const handleShare = () => {
     if (navigator.share) {
