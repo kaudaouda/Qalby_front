@@ -7,7 +7,7 @@ import { CampaignPage } from './features/funds/CampaignPage';
 import { CreateFund } from './features/funds/CreateFund';
 import { ExploreFunds } from './features/funds/ExploreFunds';
 import { PaymentPage } from './features/payment/PaymentPage';
-import { AuthInitializer, ProtectedRoute } from './components/common';
+import { AuthInitializer, ProtectedRoute, GuestRoute } from './components/common';
 
 function App() {
   return (
@@ -17,9 +17,9 @@ function App() {
       {/* Page d'accueil */}
       <Route path="/" element={<HomePage />} />
 
-      {/* Routes d'authentification */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      {/* Routes d'authentification - Accessibles uniquement aux utilisateurs non connectés */}
+      <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+      <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
       
       {/* Route profil - Protégée */}
       <Route

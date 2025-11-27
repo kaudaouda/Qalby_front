@@ -132,7 +132,6 @@ const authSlice = createSlice({
     builder
       .addCase(getCurrentUser.pending, (state) => {
         state.isLoading = true;
-        console.log('[REDUX] 🔄 getCurrentUser en cours...');
       })
       .addCase(getCurrentUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.isLoading = false;
@@ -141,7 +140,6 @@ const authSlice = createSlice({
         state.error = null;
         // Confirmer que la session existe
         localStorage.setItem('hasSession', 'true');
-        console.log('[REDUX] ✅ Utilisateur authentifié:', action.payload.email);
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         // NE PAS mettre isLoading = false immédiatement
@@ -150,16 +148,14 @@ const authSlice = createSlice({
         const hasSession = localStorage.getItem('hasSession');
         
         if (!hasSession) {
-          console.log('[REDUX] ❌ Pas de session, déconnexion');
           state.isLoading = false;
           state.isAuthenticated = false;
           state.user = null;
           localStorage.removeItem('hasSession');
         } else {
-          console.log('[REDUX] ⚠️ Erreur getCurrentUser mais session existe, on garde la connexion');
           // Garder isLoading = true pour éviter la redirection pendant le refresh
           // L'intercepteur va réessayer et on aura un nouveau fulfilled ou rejected
-          state.isLoading = true; // IMPORTANT : Garder le loading actif
+          state.isLoading = true;
           // Ne pas changer isAuthenticated, on garde l'état précédent
         }
       });
