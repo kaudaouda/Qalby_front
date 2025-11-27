@@ -211,22 +211,22 @@ export const ProfilePage = () => {
 
     try {
       setIsSaving(true);
-      // TODO: Implémenter l'appel API pour uploader les documents
-      // const { userService } = await import('../../services/userService');
-      // await userService.uploadIdentityDocument({
-      //   type: selectedDocumentType,
-      //   front: documentFiles.front,
-      //   back: documentFiles.back,
-      // });
+      const { userService } = await import('../../services/userService');
+      
+      await userService.uploadIdentityDocument({
+        document_type: selectedDocumentType,
+        front_image: documentFiles.front,
+        back_image: documentFiles.back,
+      });
 
       toast.success('Document envoyé pour vérification');
       // Réinitialiser le formulaire
       setSelectedDocumentType(null);
       setDocumentFiles({ front: null, back: null });
       setDocumentPreviews({ front: null, back: null });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur lors de l\'upload du document:', error);
-      toast.error('Impossible d\'envoyer le document');
+      toast.error(error.response?.data?.message || 'Impossible d\'envoyer le document');
     } finally {
       setIsSaving(false);
     }

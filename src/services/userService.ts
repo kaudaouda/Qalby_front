@@ -21,6 +21,12 @@ export interface ChangePasswordData {
   new_password_confirm: string;
 }
 
+export interface IdentityDocumentUpload {
+  document_type: string;
+  front_image: File;
+  back_image?: File | null;
+}
+
 export const userService = {
   /**
    * Récupérer les statistiques de l'utilisateur connecté
@@ -55,6 +61,33 @@ export const userService = {
    */
   changePassword: async (data: ChangePasswordData): Promise<any> => {
     const response = await axiosInstance.post('/api/users/users/change_password/', data);
+    return response.data;
+  },
+
+  /**
+   * Uploader un document d'identité
+   */
+  uploadIdentityDocument: async (data: IdentityDocumentUpload): Promise<any> => {
+    const formData = new FormData();
+    formData.append('document_type', data.document_type);
+    formData.append('front_image', data.front_image);
+    if (data.back_image) {
+      formData.append('back_image', data.back_image);
+    }
+
+    const response = await axiosInstance.post('/api/users/identity-documents/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  /**
+   * Récupérer le dernier document d'identité de l'utilisateur
+   */
+  getLatestIdentityDocument: async (): Promise<any> => {
+    const response = await axiosInstance.get('/api/users/identity-documents/latest/');
     return response.data;
   },
 };
