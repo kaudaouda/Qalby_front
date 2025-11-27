@@ -287,53 +287,18 @@ export const PaymentPage = () => {
                     Montant à contribuer
                   </label>
                   
-                  {/* Stepper design */}
+                  {/* Champ montant */}
                   <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border-2 border-gray-200">
-                    <div className="flex items-center justify-between gap-4">
-                      {/* Bouton Moins */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const currentAmount = parseFloat(amount) || 0;
-                          const newAmount = Math.max(0, currentAmount - 100);
-                          setAmount(newAmount.toString());
-                        }}
-                        className="w-14 h-14 bg-white hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100 rounded-xl flex items-center justify-center transition-all hover:scale-110 hover:shadow-lg border-2 border-gray-200 hover:border-red-300 group"
-                      >
-                        <FiMinus className="w-6 h-6 text-gray-600 group-hover:text-red-600" />
-                      </button>
-                      
-                      {/* Affichage du montant */}
-                      <div className="flex-1">
-                        <input
-                          type="number"
-                          id="amount"
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
-                          placeholder="0"
-                          min="0"
-                          step="100"
-                          className="w-full bg-white border-2 border-gray-300 rounded-xl px-4 py-4 text-center text-3xl font-bold text-gray-900 focus:outline-none focus:border-qalby-orange-500 focus:ring-4 focus:ring-qalby-orange-100 transition-all"
-                        />
-                        <p className="text-center text-sm font-semibold text-gray-600 mt-2">F CFA</p>
-                      </div>
-                      
-                      {/* Bouton Plus */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const currentAmount = parseFloat(amount) || 0;
-                          setAmount((currentAmount + 100).toString());
-                        }}
-                        className="w-14 h-14 bg-gradient-to-br from-qalby-orange-500 to-purple-600 hover:from-qalby-orange-600 hover:to-purple-700 rounded-xl flex items-center justify-center transition-all hover:scale-110 hover:shadow-xl shadow-lg"
-                      >
-                        <FiPlus className="w-6 h-6 text-white" />
-                      </button>
-                    </div>
-                    
-                    <p className="text-xs text-gray-500 mt-4 text-center">
-                      Cliquez sur <span className="font-semibold">+</span> ou <span className="font-semibold">-</span> pour ajuster par 100 F CFA
-                    </p>
+                    <input
+                      type="number"
+                      id="amount"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      placeholder="Entrez le montant"
+                      min="0"
+                      className="w-full bg-white border-2 border-gray-300 rounded-xl px-4 py-4 text-center text-3xl font-bold text-gray-900 focus:outline-none focus:border-qalby-orange-500 focus:ring-4 focus:ring-qalby-orange-100 transition-all"
+                    />
+                    <p className="text-center text-sm font-semibold text-gray-600 mt-2">F CFA</p>
                   </div>
                   
                   {/* Suggestions de montant */}
