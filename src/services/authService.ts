@@ -133,7 +133,14 @@ export const authService = {
   },
 
   async getCurrentUser(): Promise<User> {
-    const response = await axiosInstance.get(API_ENDPOINTS.USER_ME);
-    return response.data;
+    try {
+      console.log('[AUTH-SERVICE] Appel getCurrentUser...');
+      const response = await axiosInstance.get(API_ENDPOINTS.USER_ME);
+      console.log('[AUTH-SERVICE] ✅ getCurrentUser réussi:', response.data.email);
+      return response.data;
+    } catch (error: any) {
+      console.error('[AUTH-SERVICE] ❌ getCurrentUser échoué:', error.response?.status, error.message);
+      throw error;
+    }
   },
 };

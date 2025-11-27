@@ -139,13 +139,25 @@ const authSlice = createSlice({
         state.user = action.payload;
         // Confirmer que la session existe
         localStorage.setItem('hasSession', 'true');
+        console.log('[REDUX] ✅ Utilisateur authentifié:', action.payload.email);
       })
-      .addCase(getCurrentUser.rejected, (state) => {
+      .addCase(getCurrentUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.isAuthenticated = false;
-        state.user = null;
-        // Supprimer le flag de session car les cookies ont expiré ou sont invalides
-        localStorage.removeItem('hasSession');
+        
+        // NE PAS déconnecter si c'est juste un token expiré qui sera rafraîchi
+        // L'intercepteur axios va gérer le refresh automatiquement
+        // On ne déconnecte que si hasSession n'existe pas (vraiment déconnecté)
+        const hasSession = localStorage.getItem('hasSession');
+        
+        if (!hasSession) {
+          console.log('[REDUX] ❌ Pas de session, déconnexion');
+          state.isAuthenticated = false;
+          state.user = null;
+        } else {
+          console.log('[REDUX] ⚠️ Erreur getCurrentUser mais session existe, on garde la connexion');
+          // Garder isAuthenticated = true si on avait une session
+          // L'intercepteur va rafraîchir le token
+        }
       });
   },
 });

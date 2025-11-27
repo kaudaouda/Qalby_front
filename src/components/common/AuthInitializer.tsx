@@ -10,6 +10,8 @@ export const AuthInitializer = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    console.log('[AUTH-INITIALIZER] Initialisation de l\'authentification...');
+    
     // Toujours tenter de récupérer l'utilisateur au chargement
     // Les cookies HTTP-only seront automatiquement envoyés par le navigateur
     // Si les cookies n'existent pas ou sont invalides, l'API retournera 401
