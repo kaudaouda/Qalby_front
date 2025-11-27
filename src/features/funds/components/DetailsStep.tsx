@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FundFormData } from '../CreateFund';
-import { CATEGORIES } from '../../../constants/categories';
+import { useCategories } from '../../../hooks/useCategories';
 
 interface DetailsStepProps {
   formData: FundFormData;
@@ -11,6 +11,7 @@ interface DetailsStepProps {
 
 export const DetailsStep = ({ formData, updateFormData, onNext, onBack }: DetailsStepProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { categories, loading: categoriesLoading } = useCategories();
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -53,8 +54,13 @@ export const DetailsStep = ({ formData, updateFormData, onNext, onBack }: Detail
         <label className="block text-sm font-medium text-gray-700 mb-3">
           Catégorie *
         </label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {CATEGORIES.map((category) => {
+        {categoriesLoading ? (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {categories.map((category) => {
             const IconComponent = category.icon;
             return (
               <button
@@ -78,7 +84,8 @@ export const DetailsStep = ({ formData, updateFormData, onNext, onBack }: Detail
               </button>
             );
           })}
-        </div>
+          </div>
+        )}
         {errors.category && (
           <p className="mt-2 text-sm text-red-600">{errors.category}</p>
         )}

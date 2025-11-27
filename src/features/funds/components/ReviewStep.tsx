@@ -1,5 +1,5 @@
 import type { FundFormData } from '../CreateFund';
-import { CATEGORIES_MAP } from '../../../constants/categories';
+import { useCategories } from '../../../hooks/useCategories';
 
 interface ReviewStepProps {
   formData: FundFormData;
@@ -10,6 +10,12 @@ interface ReviewStepProps {
 }
 
 export const ReviewStep = ({ formData, onSubmit, onBack, isSubmitting, error }: ReviewStepProps) => {
+  const { categories } = useCategories();
+  
+  const getCategoryLabel = (value: string) => {
+    return categories.find(cat => cat.value === value)?.label || value;
+  };
+  
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
       day: 'numeric',
@@ -56,7 +62,7 @@ export const ReviewStep = ({ formData, onSubmit, onBack, isSubmitting, error }: 
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full">
-                {CATEGORIES_MAP[formData.category]}
+                {getCategoryLabel(formData.category)}
               </span>
               <span className={`
                 px-3 py-1 text-sm font-medium rounded-full

@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fundService } from '../../services/fundService';
 import type { Fund } from '../../types';
-import { CATEGORIES_WITH_ALL, getCategory } from '../../constants/categories';
+import { useCategoriesWithAll } from '../../hooks/useCategories';
 
 export const ExploreFunds = () => {
   const [funds, setFunds] = useState<Fund[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [error, setError] = useState<string | null>(null);
+  const { categories: categoriesWithAll, loading: categoriesLoading } = useCategoriesWithAll();
 
   useEffect(() => {
     loadFunds();
@@ -46,7 +47,7 @@ export const ExploreFunds = () => {
       ) : (
         <div className="aspect-video bg-gradient-to-br from-qalby-orange-100 to-qalby-orange-200 flex items-center justify-center">
           {(() => {
-            const category = getCategory(fund.category);
+            const category = categoriesWithAll.find(c => c.value === fund.category);
             const IconComponent = category?.icon;
             return IconComponent ? (
               <IconComponent className="text-6xl text-qalby-orange-600" />
@@ -115,8 +116,13 @@ export const ExploreFunds = () => {
 
         {/* Filtres par catégorie */}
         <div className="mb-8">
-          <div className="flex flex-wrap gap-3 justify-center">
-            {CATEGORIES_WITH_ALL.map((category) => {
+          {categoriesLoading ? (
+            <div className="flex justify-center py-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-qalby-orange-500"></div>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-3 justify-center">
+              {categoriesWithAll.map((category) => {
               const IconComponent = category.icon;
               return (
                 <button
@@ -136,7 +142,8 @@ export const ExploreFunds = () => {
                 </button>
               );
             })}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Liste des cagnottes */}
