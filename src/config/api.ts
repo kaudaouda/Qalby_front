@@ -5,6 +5,7 @@ export const API_ENDPOINTS = {
   REGISTER: '/api/users/register/',
   LOGIN: '/api/users/login/',
   LOGOUT: '/api/users/logout/',
+  REFRESH_TOKEN: '/api/users/refresh/',
 
   // Users
   USERS: '/api/users/',
