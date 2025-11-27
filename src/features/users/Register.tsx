@@ -23,7 +23,9 @@ export const Register = () => {
   });
   const [phoneCode, setPhoneCode] = useState('+225');
   const [showPassword, setShowPassword] = useState(false);
-  const [countries, setCountries] = useState<Country[]>([]);
+  const [countries, setCountries] = useState<Country[]>([
+    { id: '1', name: 'Côte d\'Ivoire', phone_code: '+225', flag: '🇨🇮' }
+  ]);
   const [loadingCountries, setLoadingCountries] = useState(true);
 
   // Charger les pays au montage du composant
@@ -31,10 +33,13 @@ export const Register = () => {
     const fetchCountries = async () => {
       try {
         const data = await countryService.getCountries();
-        setCountries(data);
+        // S'assurer que data est un tableau avant de l'assigner
+        if (Array.isArray(data) && data.length > 0) {
+          setCountries(data);
+        }
       } catch (err) {
         console.error('Erreur lors du chargement des pays:', err);
-        toast.error('Impossible de charger la liste des pays');
+        // Garder le pays par défaut (Côte d'Ivoire) en cas d'erreur
       } finally {
         setLoadingCountries(false);
       }
@@ -175,7 +180,7 @@ export const Register = () => {
                   className="appearance-none block w-28 pl-3 pr-8 py-3 border border-r-0 border-neutral-300 text-neutral-900 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-white"
                   style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
                 >
-                  {countries.map((country) => (
+                  {Array.isArray(countries) && countries.map((country) => (
                     <option key={country.id} value={country.phone_code}>
                       {country.flag} {country.phone_code}
                     </option>
