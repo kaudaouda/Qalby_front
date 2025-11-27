@@ -23,6 +23,7 @@ function App() {
       {/* Routes des cagnottes */}
       <Route path="/campaigns" element={<ExploreFunds />} />
       <Route path="/campaign/:id" element={<CampaignPage />} />
+      <Route path="/payment/:fundId" element={<PaymentPage />} />
       <Route 
         path="/create-fund" 
         element={
