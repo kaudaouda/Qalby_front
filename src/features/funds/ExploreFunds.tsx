@@ -2,20 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fundService } from '../../services/fundService';
 import type { Fund } from '../../types';
-
-const CATEGORIES = [
-  { value: 'all', label: 'Toutes', icon: '✨' },
-  { value: 'education', label: 'Éducation', icon: '🎓' },
-  { value: 'health', label: 'Santé', icon: '🏥' },
-  { value: 'emergency', label: 'Urgence', icon: '🚨' },
-  { value: 'event', label: 'Événement', icon: '🎉' },
-  { value: 'community', label: 'Communauté', icon: '🤝' },
-  { value: 'sports', label: 'Sports', icon: '⚽' },
-  { value: 'charity', label: 'Charité', icon: '❤️' },
-  { value: 'business', label: 'Entreprise', icon: '💼' },
-  { value: 'personal', label: 'Personnel', icon: '👤' },
-  { value: 'other', label: 'Autre', icon: '✨' },
-];
+import { CATEGORIES_WITH_ALL, getCategory } from '../../constants/categories';
 
 export const ExploreFunds = () => {
   const [funds, setFunds] = useState<Fund[]>([]);
@@ -58,7 +45,15 @@ export const ExploreFunds = () => {
         </div>
       ) : (
         <div className="aspect-video bg-gradient-to-br from-qalby-orange-100 to-qalby-orange-200 flex items-center justify-center">
-          <span className="text-6xl">{CATEGORIES.find(c => c.value === fund.category)?.icon || '✨'}</span>
+          {(() => {
+            const category = getCategory(fund.category);
+            const IconComponent = category?.icon;
+            return IconComponent ? (
+              <IconComponent className="text-6xl text-qalby-orange-600" />
+            ) : (
+              <span className="text-6xl">✨</span>
+            );
+          })()}
         </div>
       )}
 
@@ -121,23 +116,26 @@ export const ExploreFunds = () => {
         {/* Filtres par catégorie */}
         <div className="mb-8">
           <div className="flex flex-wrap gap-3 justify-center">
-            {CATEGORIES.map((category) => (
-              <button
-                key={category.value}
-                onClick={() => setSelectedCategory(category.value)}
-                className={`
-                  px-4 py-2 rounded-full font-medium transition-all
-                  ${
-                    selectedCategory === category.value
-                      ? 'bg-qalby-orange-500 text-white shadow-lg'
-                      : 'bg-white text-gray-700 hover:bg-gray-100 shadow'
-                  }
-                `}
-              >
-                <span className="mr-2">{category.icon}</span>
-                {category.label}
-              </button>
-            ))}
+            {CATEGORIES_WITH_ALL.map((category) => {
+              const IconComponent = category.icon;
+              return (
+                <button
+                  key={category.value}
+                  onClick={() => setSelectedCategory(category.value)}
+                  className={`
+                    px-4 py-2 rounded-full font-medium transition-all flex items-center gap-2
+                    ${
+                      selectedCategory === category.value
+                        ? 'bg-qalby-orange-500 text-white shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 shadow'
+                    }
+                  `}
+                >
+                  <IconComponent className="text-lg" />
+                  {category.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 

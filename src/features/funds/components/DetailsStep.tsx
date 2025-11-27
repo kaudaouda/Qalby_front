@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { FundFormData } from '../CreateFund';
+import { CATEGORIES } from '../../../constants/categories';
 
 interface DetailsStepProps {
   formData: FundFormData;
@@ -7,19 +8,6 @@ interface DetailsStepProps {
   onNext: () => void;
   onBack: () => void;
 }
-
-const CATEGORIES = [
-  { value: 'education', label: 'Éducation', icon: '🎓', description: 'Frais de scolarité, matériel...' },
-  { value: 'health', label: 'Santé', icon: '🏥', description: 'Frais médicaux, soins...' },
-  { value: 'emergency', label: 'Urgence', icon: '🚨', description: 'Situation d\'urgence' },
-  { value: 'event', label: 'Événement', icon: '🎉', description: 'Mariage, anniversaire...' },
-  { value: 'community', label: 'Communauté', icon: '🤝', description: 'Projet communautaire' },
-  { value: 'sports', label: 'Sports', icon: '⚽', description: 'Équipement, compétition...' },
-  { value: 'charity', label: 'Charité', icon: '❤️', description: 'Action caritative' },
-  { value: 'business', label: 'Entreprise', icon: '💼', description: 'Startup, projet pro...' },
-  { value: 'personal', label: 'Personnel', icon: '👤', description: 'Projet personnel' },
-  { value: 'other', label: 'Autre', icon: '✨', description: 'Autre projet' },
-];
 
 export const DetailsStep = ({ formData, updateFormData, onNext, onBack }: DetailsStepProps) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -66,27 +54,30 @@ export const DetailsStep = ({ formData, updateFormData, onNext, onBack }: Detail
           Catégorie *
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {CATEGORIES.map((category) => (
-            <button
-              key={category.value}
-              type="button"
-              onClick={() => updateFormData('category', category.value)}
-              className={`
-                p-3 rounded-lg border-2 transition-all
-                ${
-                  formData.category === category.value
-                    ? 'border-primary-600 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }
-              `}
-            >
-              <div className="text-2xl mb-1">{category.icon}</div>
-              <div className="text-xs font-medium text-gray-900">{category.label}</div>
-              <div className="text-xs text-gray-500 mt-1 line-clamp-2">
-                {category.description}
-              </div>
-            </button>
-          ))}
+          {CATEGORIES.map((category) => {
+            const IconComponent = category.icon;
+            return (
+              <button
+                key={category.value}
+                type="button"
+                onClick={() => updateFormData('category', category.value)}
+                className={`
+                  p-3 rounded-lg border-2 transition-all
+                  ${
+                    formData.category === category.value
+                      ? 'border-primary-600 bg-primary-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }
+                `}
+              >
+                <IconComponent className="text-2xl mb-1 mx-auto text-primary-600" />
+                <div className="text-xs font-medium text-gray-900">{category.label}</div>
+                <div className="text-xs text-gray-500 mt-1 line-clamp-2">
+                  {category.description}
+                </div>
+              </button>
+            );
+          })}
         </div>
         {errors.category && (
           <p className="mt-2 text-sm text-red-600">{errors.category}</p>

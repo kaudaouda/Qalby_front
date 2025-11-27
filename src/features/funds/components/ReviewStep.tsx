@@ -1,4 +1,5 @@
 import type { FundFormData } from '../CreateFund';
+import { CATEGORIES_MAP } from '../../../constants/categories';
 
 interface ReviewStepProps {
   formData: FundFormData;
@@ -7,19 +8,6 @@ interface ReviewStepProps {
   isSubmitting: boolean;
   error: string | null;
 }
-
-const CATEGORIES_MAP: Record<string, string> = {
-  education: 'Éducation',
-  health: 'Santé',
-  emergency: 'Urgence',
-  event: 'Événement',
-  community: 'Communauté',
-  sports: 'Sports',
-  charity: 'Charité',
-  business: 'Entreprise',
-  personal: 'Personnel',
-  other: 'Autre',
-};
 
 export const ReviewStep = ({ formData, onSubmit, onBack, isSubmitting, error }: ReviewStepProps) => {
   const formatDate = (dateString: string) => {
