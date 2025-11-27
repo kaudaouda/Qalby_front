@@ -201,7 +201,7 @@ export const CampaignPage = () => {
             {/* Barre de progression */}
             <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
               <div className="mb-6">
-                <div className="flex items-baseline justify-between mb-6">
+                <div className="flex items-baseline justify-between mb-10">
                   <div>
                     <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Collecté</p>
                     <span className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-qalby-orange-600 to-qalby-orange-500 bg-clip-text text-transparent">
@@ -363,7 +363,7 @@ export const CampaignPage = () => {
                   <div className="space-y-3">
                     {contributors.slice(0, 5).map((contributor, index) => (
                       <div
-                        key={contributor.id || index}
+                        key={index}
                         className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-100 hover:shadow-md transition-all duration-300"
                       >
                         <div className="flex items-center gap-3">
