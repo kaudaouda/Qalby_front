@@ -421,7 +421,7 @@ export const PaymentPage = () => {
 
               {/* Erreur */}
               {selectedProvider && amount && parseFloat(amount) > 0 && phone && (
-              <div className="animate-fadeIn">
+                <div className="animate-fadeIn">
                   {error && (
                     <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
                       <FiAlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
@@ -444,8 +444,8 @@ export const PaymentPage = () => {
                   </div>
                 </div>
 
-                {/* Bouton de soumission */}
-                <button
+                  {/* Bouton de soumission */}
+                  <button
                   type="submit"
                   disabled={loading || !selectedProvider || !amount || !phone}
                   className="w-full py-5 bg-gradient-to-r from-qalby-orange-500 via-orange-600 to-purple-600 text-white font-bold rounded-2xl hover:from-qalby-orange-600 hover:via-orange-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2 text-lg relative overflow-hidden group"
@@ -462,10 +462,10 @@ export const PaymentPage = () => {
                     <>
                       <FiCheck className="w-6 h-6" />
                       Continuer vers le paiement
-                    </>
-                  )}
-                </button>
-              </div>
+                      </>
+                    )}
+                  </button>
+                </div>
               )}
             </form>
           )}
