@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../hooks';
 import { fundService } from '../../services/fundService';
 import { StepIndicator } from './components/StepIndicator';
 import { BasicInfoStep } from './components/BasicInfoStep';
@@ -28,7 +27,6 @@ const STEPS = [
 
 export const CreateFund = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,12 +41,6 @@ export const CreateFund = () => {
     end_date: '',
     visibility: 'public',
   });
-
-  // Rediriger si non connecté
-  if (!isAuthenticated) {
-    navigate('/login', { state: { from: '/create-fund' } });
-    return null;
-  }
 
   const updateFormData = (field: keyof FundFormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
