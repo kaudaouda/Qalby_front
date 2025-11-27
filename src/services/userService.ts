@@ -15,6 +15,12 @@ export interface UserProfileUpdate {
   profile_picture?: File | null;
 }
 
+export interface ChangePasswordData {
+  old_password: string;
+  new_password: string;
+  new_password_confirm: string;
+}
+
 export const userService = {
   /**
    * Récupérer les statistiques de l'utilisateur connecté
@@ -43,5 +49,12 @@ export const userService = {
     });
     return response.data;
   },
-};
 
+  /**
+   * Changer le mot de passe de l'utilisateur connecté
+   */
+  changePassword: async (data: ChangePasswordData): Promise<any> => {
+    const response = await axiosInstance.post('/api/users/users/change_password/', data);
+    return response.data;
+  },
+};
