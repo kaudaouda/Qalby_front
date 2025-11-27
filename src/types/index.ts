@@ -42,6 +42,7 @@ export interface Fund {
   updated_at: string;
   progress_percentage: number;
   days_remaining: number;
+  contributors_count?: number;
 }
 
 // Fund Detail (with statistics)
@@ -76,11 +77,15 @@ export interface FundStatistics {
   days_remaining: number;
 }
 
-// Contributor
+// Contributor (from backend /api/funds/{id}/contributors/)
 export interface Contributor {
-  user: User;
-  total_contributed: number;
-  contributions_count: number;
+  id: string;
+  name: string;
+  email: string;
+  avatar: string | null;
+  total_amount: number;
+  contribution_count: number;
+  latest_contribution_date: string;
 }
 
 // Contribution types

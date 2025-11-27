@@ -1,4 +1,6 @@
 import { FiEdit, FiShare2, FiDollarSign, FiCheckCircle } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import { useAppSelector } from '../../../hooks';
 
 const steps = [
   {
@@ -32,6 +34,8 @@ const steps = [
 ];
 
 export const HowItWorks = () => {
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+
   return (
     <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto">
@@ -81,15 +85,17 @@ export const HowItWorks = () => {
           })}
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-12">
-          <a
-            href="/register"
-            className="inline-flex items-center justify-center bg-qalby-orange-500 text-white px-8 py-4 rounded-xl hover:bg-qalby-orange-600 hover:shadow-xl transition-all duration-300 font-semibold text-lg"
-          >
-            Commencer maintenant
-          </a>
-        </div>
+        {/* CTA - Only show for non-authenticated users */}
+        {!isAuthenticated && (
+          <div className="text-center mt-12">
+            <Link
+              to="/register"
+              className="inline-flex items-center justify-center bg-qalby-orange-500 text-white px-8 py-4 rounded-xl hover:bg-qalby-orange-600 hover:shadow-xl transition-all duration-300 font-semibold text-lg"
+            >
+              Commencer maintenant
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
