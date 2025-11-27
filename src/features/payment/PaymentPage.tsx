@@ -157,7 +157,7 @@ export const PaymentPage = () => {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR').format(amount);
+    return new Intl.NumberFormat('fr-FR').format(amount) + ' F CFA';
   };
 
   if (loadingFund) {
@@ -192,7 +192,7 @@ export const PaymentPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Bouton retour */}
         <button
@@ -204,35 +204,41 @@ export const PaymentPage = () => {
         </button>
 
         {/* Card principale */}
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100">
-          {/* Header */}
-          <div className="border-b border-gray-100 p-6 md:p-8">
-            <div className="flex items-start gap-4">
+        <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+          {/* Header avec gradient */}
+          <div className="bg-gradient-to-r from-qalby-orange-500 to-purple-600 p-6 md:p-8 relative overflow-hidden">
+            {/* Motif décoratif */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-24 -translate-x-24"></div>
+            
+            <div className="flex items-start gap-4 relative z-10">
               {fund.image ? (
                 <img
                   src={fund.image}
                   alt={fund.title}
-                  className="w-20 h-20 rounded-xl object-cover"
+                  className="w-20 h-20 rounded-xl object-cover ring-4 ring-white/30 shadow-lg"
                 />
               ) : (
-                <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-qalby-orange-100 to-qalby-orange-200 flex items-center justify-center">
-                  <span className="text-2xl">💝</span>
+                <div className="w-20 h-20 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center ring-4 ring-white/30 shadow-lg">
+                  <span className="text-3xl">💝</span>
                 </div>
               )}
               <div className="flex-1">
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-lg">
                   Participer au projet
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-white/90 font-medium drop-shadow">
                   {fund.title}
                 </p>
-                <div className="mt-2 flex items-center gap-4 text-sm">
-                  <span className="text-gray-500">
-                    Objectif : <span className="font-semibold text-gray-900">{formatCurrency(fund.goal_amount)} FCFA</span>
-                  </span>
-                  <span className="text-gray-500">
-                    Collecté : <span className="font-semibold text-qalby-orange-600">{formatCurrency(fund.current_amount)} FCFA</span>
-                  </span>
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  <div className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-xl">
+                    <span className="text-xs text-white/80 block">Objectif</span>
+                    <span className="font-bold text-white">{formatCurrency(fund.goal_amount)}</span>
+                  </div>
+                  <div className="px-4 py-2 bg-white/30 backdrop-blur-sm rounded-xl">
+                    <span className="text-xs text-white/80 block">Collecté</span>
+                    <span className="font-bold text-white">{formatCurrency(fund.current_amount)}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -244,8 +250,9 @@ export const PaymentPage = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Sélection de l'opérateur */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
-                    Opérateur Mobile Money *
+                  <label className="block text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <span className="w-8 h-8 bg-gradient-to-br from-qalby-orange-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">1</span>
+                    Choisissez votre opérateur Mobile Money
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     {PROVIDERS.map((provider) => (
@@ -255,8 +262,8 @@ export const PaymentPage = () => {
                         onClick={() => setSelectedProvider(provider)}
                         className={`p-4 rounded-2xl border-2 transition-all duration-300 flex items-center gap-3 ${
                           selectedProvider?.id === provider.id
-                            ? 'border-qalby-orange-500 bg-qalby-orange-50 shadow-lg'
-                            : 'border-gray-200 hover:border-gray-300'
+                            ? 'border-qalby-orange-500 bg-gradient-to-br from-qalby-orange-50 to-purple-50 shadow-xl scale-105'
+                            : 'border-gray-200 hover:border-qalby-orange-200 hover:shadow-lg hover:scale-102'
                         }`}
                       >
                         <img 
@@ -274,8 +281,9 @@ export const PaymentPage = () => {
 
                 {/* Montant */}
                 <div>
-                  <label htmlFor="amount" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Montant (FCFA) *
+                  <label htmlFor="amount" className="block text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                    <span className="w-8 h-8 bg-gradient-to-br from-qalby-orange-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">2</span>
+                    Montant à contribuer
                   </label>
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -288,8 +296,11 @@ export const PaymentPage = () => {
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="1000"
                       min="1"
-                      className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 transition-colors text-lg font-semibold"
+                      className="w-full pl-12 pr-24 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 focus:ring-4 focus:ring-qalby-orange-100 transition-all text-lg font-semibold"
                     />
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">
+                      F CFA
+                    </div>
                   </div>
                   {/* Suggestions de montant */}
                   <div className="flex gap-2 mt-3">
@@ -298,7 +309,7 @@ export const PaymentPage = () => {
                         key={val}
                         type="button"
                         onClick={() => setAmount(val.toString())}
-                        className="px-4 py-2 text-sm bg-gray-100 hover:bg-qalby-orange-100 hover:text-qalby-orange-700 rounded-xl transition-colors font-medium"
+                        className="px-4 py-2 text-sm bg-gradient-to-br from-gray-50 to-gray-100 hover:from-qalby-orange-100 hover:to-purple-100 hover:text-qalby-orange-700 border border-gray-200 hover:border-qalby-orange-300 rounded-xl transition-all font-medium hover:scale-105 hover:shadow-md"
                       >
                         {formatCurrency(val)}
                       </button>
@@ -308,8 +319,9 @@ export const PaymentPage = () => {
 
                 {/* Numéro de téléphone */}
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Numéro de téléphone *
+                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                    <span className="w-8 h-8 bg-gradient-to-br from-qalby-orange-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">3</span>
+                    Votre numéro Mobile Money
                   </label>
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -321,7 +333,7 @@ export const PaymentPage = () => {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="0757000000"
-                      className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 transition-colors text-lg"
+                      className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 focus:ring-4 focus:ring-qalby-orange-100 transition-all text-lg font-mono"
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
@@ -343,7 +355,8 @@ export const PaymentPage = () => {
 
                 {/* Message (optionnel) */}
                 <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="message" className="block text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                    <span className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-500 rounded-lg flex items-center justify-center text-white text-sm">💬</span>
                     Message de soutien (optionnel)
                   </label>
                   <div className="relative">
@@ -357,7 +370,7 @@ export const PaymentPage = () => {
                       placeholder="Laissez un message d'encouragement..."
                       rows={3}
                       maxLength={200}
-                      className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 transition-colors resize-none"
+                      className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-qalby-orange-500 focus:ring-4 focus:ring-qalby-orange-100 transition-all resize-none"
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1 text-right">
@@ -374,22 +387,33 @@ export const PaymentPage = () => {
                 )}
 
                 {/* Info simulation */}
-                <div className="p-4 bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-xl">
-                  <p className="text-sm text-yellow-900 font-medium">
-                    🧪 <strong>Mode simulation</strong> - Aucun argent ne sera débité. Utilisez les numéros de test ci-dessus.
-                  </p>
+                <div className="p-5 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 border-2 border-yellow-200 rounded-2xl">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center flex-shrink-0 text-xl">
+                      🧪
+                    </div>
+                    <div>
+                      <p className="font-bold text-yellow-900 mb-1">Mode simulation activé</p>
+                      <p className="text-sm text-yellow-800">
+                        Aucun argent ne sera débité. Utilisez les numéros de test ci-dessus pour tester les différents scénarios.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Bouton de soumission */}
                 <button
                   type="submit"
                   disabled={loading || !selectedProvider || !amount || !phone}
-                  className="w-full py-5 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white font-bold rounded-2xl hover:from-qalby-orange-600 hover:to-qalby-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-lg"
+                  className="w-full py-5 bg-gradient-to-r from-qalby-orange-500 via-orange-600 to-purple-600 text-white font-bold rounded-2xl hover:from-qalby-orange-600 hover:via-orange-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2 text-lg relative overflow-hidden group"
                 >
+                  {/* Effet de brillance au hover */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+                  
                   {loading ? (
                     <>
                       <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Traitement...
+                      Traitement en cours...
                     </>
                   ) : (
                     <>
@@ -404,46 +428,54 @@ export const PaymentPage = () => {
             {step === 'confirmation' && paymentData && (
               <div className="space-y-6">
                 <div className="text-center">
-                  <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FiPhone className="w-12 h-12 text-blue-600" />
+                  <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl animate-pulse">
+                    <FiPhone className="w-12 h-12 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-3">
                     Confirmez votre paiement
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-lg">
                     Composez le code USSD suivant sur votre téléphone
                   </p>
                 </div>
 
                 {/* Code USSD */}
-                <div className="p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border-2 border-blue-200">
-                  <p className="text-sm text-gray-600 text-center mb-3 uppercase tracking-wide">Code USSD</p>
-                  <p className="text-4xl font-mono font-bold text-center text-blue-900 mb-4">
-                    {paymentData.ussd_code}
-                  </p>
-                  <p className="text-xs text-center text-gray-600">
-                    Copiez ce code et composez-le sur votre téléphone
-                  </p>
+                <div className="relative p-8 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 rounded-3xl shadow-2xl overflow-hidden">
+                  {/* Motif décoratif */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+                  
+                  <div className="relative z-10">
+                    <p className="text-sm text-white/80 text-center mb-3 uppercase tracking-widest font-semibold">Code USSD</p>
+                    <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-4">
+                      <p className="text-5xl font-mono font-bold text-center text-white drop-shadow-lg">
+                        {paymentData.ussd_code}
+                      </p>
+                    </div>
+                    <p className="text-sm text-center text-white/90 font-medium">
+                      📱 Copiez ce code et composez-le sur votre téléphone
+                    </p>
+                  </div>
                 </div>
 
                 {/* Détails du paiement */}
-                <div className="space-y-3 p-5 bg-gray-50 rounded-2xl">
-                  <h3 className="font-semibold text-gray-900 mb-3">Détails du paiement</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Montant</span>
-                      <span className="font-bold text-lg text-qalby-orange-600">{paymentData.amount} FCFA</span>
+                <div className="space-y-3 p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border border-gray-200">
+                  <h3 className="font-bold text-gray-900 mb-4 text-lg">Détails du paiement</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between p-3 bg-white rounded-xl">
+                      <span className="text-gray-600 font-medium">Montant</span>
+                      <span className="font-bold text-lg text-qalby-orange-600">{paymentData.amount} F CFA</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Opérateur</span>
-                      <span className="font-semibold">{PROVIDERS.find(p => p.id === paymentData.provider)?.name}</span>
+                    <div className="flex justify-between p-3 bg-white rounded-xl">
+                      <span className="text-gray-600 font-medium">Opérateur</span>
+                      <span className="font-semibold text-gray-900">{PROVIDERS.find(p => p.id === paymentData.provider)?.name}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Numéro</span>
-                      <span className="font-semibold font-mono">{paymentData.phone}</span>
+                    <div className="flex justify-between p-3 bg-white rounded-xl">
+                      <span className="text-gray-600 font-medium">Numéro</span>
+                      <span className="font-semibold font-mono text-gray-900">{paymentData.phone}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Référence</span>
+                    <div className="flex justify-between p-3 bg-white rounded-xl">
+                      <span className="text-gray-600 font-medium">Référence</span>
                       <span className="font-mono text-sm text-gray-700">{paymentData.reference}</span>
                     </div>
                   </div>
@@ -493,14 +525,14 @@ export const PaymentPage = () => {
 
             {step === 'success' && (
               <div className="text-center py-12">
-                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <FiCheck className="w-12 h-12 text-green-600" />
+                <div className="w-32 h-32 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl animate-bounce">
+                  <FiCheck className="w-16 h-16 text-white" />
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">
+                <h2 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-3">
                   Paiement confirmé !
                 </h2>
                 <p className="text-lg text-gray-600 mb-2">
-                  Merci pour votre contribution de {amount} FCFA
+                  Merci pour votre contribution de <span className="font-bold text-green-600">{amount} F CFA</span>
                 </p>
                 <p className="text-sm text-gray-500 mb-8">
                   Votre soutien fait la différence
