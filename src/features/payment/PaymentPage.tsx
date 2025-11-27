@@ -279,8 +279,9 @@ export const PaymentPage = () => {
                   </div>
                 </div>
 
-                {/* Montant */}
-                <div>
+              {/* Étape 2: Montant (apparaît après sélection opérateur) */}
+              {selectedProvider && (
+                <div className="animate-fadeIn">
                   <label htmlFor="amount" className="block text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
                     <span className="w-8 h-8 bg-gradient-to-br from-qalby-orange-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">2</span>
                     Montant à contribuer
