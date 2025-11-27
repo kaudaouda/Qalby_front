@@ -8,7 +8,7 @@ import {
   getFundContributors,
   clearFund,
 } from '../../store/slices/fundSlice';
-import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward, FiInfo } from 'react-icons/fi';
 import { useCategories } from '../../hooks/useCategories';
 
 export const CampaignPage = () => {
@@ -16,6 +16,9 @@ export const CampaignPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { categories } = useCategories();
+  
+  // Récupérer l'utilisateur connecté
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   const {
     currentFund,
@@ -349,12 +352,26 @@ export const CampaignPage = () => {
               <div className="space-y-3">
                 {/* Bouton Participer */}
                 <button 
-                  onClick={() => navigate(`/payment/${id}`)}
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      // Rediriger vers login avec l'URL de retour
+                      navigate('/login', { state: { from: `/campaign/${id}` } });
+                    } else {
+                      navigate(`/payment/${id}`);
+                    }
+                  }}
                   className="w-full py-4 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white rounded-2xl font-bold hover:from-qalby-orange-600 hover:to-qalby-orange-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 transform"
                 >
                   <FiHeart className="w-5 h-5" />
-                  Participer
+                  {isAuthenticated ? 'Participer' : 'Se connecter pour participer'}
                 </button>
+                
+                {/* Message pour les non connectés */}
+                {!isAuthenticated && (
+                  <p className="text-xs text-center text-gray-600">
+                    Vous devez être connecté pour participer à cette cagnotte
+                  </p>
+                )}
                 
                 {/* Bouton Partager */}
                 <button 
