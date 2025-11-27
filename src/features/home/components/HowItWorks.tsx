@@ -87,14 +87,14 @@ export const HowItWorks = () => {
 
         {/* CTA - Only show for non-authenticated users */}
         {!isAuthenticated && (
-          <div className="text-center mt-12">
+        <div className="text-center mt-12">
             <Link
               to="/register"
-              className="inline-flex items-center justify-center bg-qalby-orange-500 text-white px-8 py-4 rounded-xl hover:bg-qalby-orange-600 hover:shadow-xl transition-all duration-300 font-semibold text-lg"
-            >
-              Commencer maintenant
+            className="inline-flex items-center justify-center bg-qalby-orange-500 text-white px-8 py-4 rounded-xl hover:bg-qalby-orange-600 hover:shadow-xl transition-all duration-300 font-semibold text-lg"
+          >
+            Commencer maintenant
             </Link>
-          </div>
+        </div>
         )}
       </div>
     </section>

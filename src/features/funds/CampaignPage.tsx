@@ -108,15 +108,6 @@ export const CampaignPage = () => {
   
   // Vérifier si l'utilisateur est le créateur de la cagnotte
   const isCreator = Boolean(user && currentFund.creator?.id === user.id);
-  
-  // Debug logs
-  console.log('🔍 Debug Creator Banner:', {
-    user,
-    userId: user?.id,
-    creatorId: currentFund.creator?.id,
-    isCreator,
-    isAuthenticated
-  });
 
   const handleShare = () => {
     if (navigator.share) {

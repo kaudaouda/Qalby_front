@@ -35,7 +35,7 @@ export const Register = () => {
         const data = await countryService.getCountries();
         // S'assurer que data est un tableau avant de l'assigner
         if (Array.isArray(data) && data.length > 0) {
-          setCountries(data);
+        setCountries(data);
         }
       } catch (err) {
         console.error('Erreur lors du chargement des pays:', err);
