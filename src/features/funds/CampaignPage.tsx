@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
@@ -10,12 +10,14 @@ import {
 } from '../../store/slices/fundSlice';
 import { FiArrowLeft, FiCalendar, FiUsers, FiTrendingUp, FiHeart, FiShare2, FiClock, FiAward } from 'react-icons/fi';
 import { useCategories } from '../../hooks/useCategories';
+import { PaymentModal } from '../payment/PaymentModal';
 
 export const CampaignPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { categories } = useCategories();
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const {
     currentFund,
@@ -101,6 +103,35 @@ export const CampaignPage = () => {
 
   const CategoryIcon = getCategoryIcon(currentFund.category);
   const progressPercentage = Math.min(currentFund.progress_percentage, 100);
+
+  const handlePaymentSuccess = () => {
+    // Recharger les données après paiement réussi
+    if (id) {
+      dispatch(getFundDetail(id));
+      dispatch(getFundStatistics(id));
+      dispatch(getFundContributions({ id, page: 1 }));
+      dispatch(getFundContributors(id));
+    }
+    setIsPaymentModalOpen(false);
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: currentFund.title,
+        text: `Soutenez mon projet: ${currentFund.title}`,
+        url: window.location.href,
+      }).catch(() => {
+        // Fallback: copier le lien
+        navigator.clipboard.writeText(window.location.href);
+        alert('Lien copié dans le presse-papiers !');
+      });
+    } else {
+      // Fallback: copier le lien
+      navigator.clipboard.writeText(window.location.href);
+      alert('Lien copié dans le presse-papiers !');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
@@ -330,13 +361,19 @@ export const CampaignPage = () => {
               </h2>
               <div className="space-y-3">
                 {/* Bouton Participer */}
-                <button className="w-full py-4 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white rounded-2xl font-bold hover:from-qalby-orange-600 hover:to-qalby-orange-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 transform">
+                <button 
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  className="w-full py-4 bg-gradient-to-r from-qalby-orange-500 to-qalby-orange-600 text-white rounded-2xl font-bold hover:from-qalby-orange-600 hover:to-qalby-orange-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 transform"
+                >
                   <FiHeart className="w-5 h-5" />
                   Participer
                 </button>
                 
                 {/* Bouton Partager */}
-                <button className="w-full py-4 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl font-semibold hover:border-qalby-orange-500 hover:text-qalby-orange-600 hover:bg-qalby-orange-50 transition-all duration-300 flex items-center justify-center gap-2">
+                <button 
+                  onClick={handleShare}
+                  className="w-full py-4 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl font-semibold hover:border-qalby-orange-500 hover:text-qalby-orange-600 hover:bg-qalby-orange-50 transition-all duration-300 flex items-center justify-center gap-2"
+                >
                   <FiShare2 className="w-5 h-5" />
                   Partager
                 </button>
@@ -400,6 +437,15 @@ export const CampaignPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de paiement */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        fundId={id!}
+        fundTitle={currentFund.title}
+        onSuccess={handlePaymentSuccess}
+      />
     </div>
   );
 };
