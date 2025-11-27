@@ -2,7 +2,7 @@ import axios from 'axios';
 import { API_BASE_URL, API_ENDPOINTS } from '../config/api';
 import type { User } from '../types';
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true, // Important pour les cookies HTTP-only
   headers: {

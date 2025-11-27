@@ -1,4 +1,4 @@
-import { axiosInstance } from '../config/api';
+import { axiosInstance } from './authService';
 
 export interface UserStats {
   funds_created: number;
