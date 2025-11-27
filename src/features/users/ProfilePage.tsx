@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { FiUser, FiMail, FiPhone, FiGlobe, FiEdit2, FiSave, FiX, FiCamera, FiHeart, FiLock, FiFileText, FiBell, FiCalendar, FiEye, FiEyeOff, FiShield, FiUpload, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
+import { FiUser, FiMail, FiPhone, FiGlobe, FiEdit2, FiSave, FiX, FiCamera, FiHeart, FiLock, FiFileText, FiBell, FiCalendar, FiEye, FiEyeOff, FiShield, FiUpload, FiCheckCircle, FiAlertCircle, FiCreditCard, FiBook, FiTruck, FiMapPin } from 'react-icons/fi';
 import { authService } from '../../services/authService';
 import { toast } from 'react-toastify';
 
@@ -794,28 +794,35 @@ export const ProfilePage = () => {
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {[
-                        { id: 'id_card', label: 'Carte d\'identité', icon: '🪪' },
-                        { id: 'passport', label: 'Passeport', icon: '📘' },
-                        { id: 'driving_license', label: 'Permis de conduire', icon: '🚗' },
-                        { id: 'residence_permit', label: 'Titre de séjour', icon: '🛂' },
-                      ].map((doc) => (
-                        <button
-                          key={doc.id}
-                          type="button"
-                          onClick={() => setSelectedDocumentType(doc.id)}
-                          className={`p-4 rounded-xl border-2 transition-all text-left flex items-center gap-3 ${
-                            selectedDocumentType === doc.id
-                              ? 'border-qalby-orange-500 bg-qalby-orange-50'
-                              : 'border-gray-200 hover:border-qalby-orange-200 bg-white'
-                          }`}
-                        >
-                          <span className="text-3xl">{doc.icon}</span>
-                          <span className="font-semibold text-gray-900">{doc.label}</span>
-                          {selectedDocumentType === doc.id && (
-                            <FiCheckCircle className="ml-auto w-5 h-5 text-qalby-orange-600" />
-                          )}
-                        </button>
-                      ))}
+                        { id: 'id_card', label: 'Carte d\'identité', icon: FiCreditCard, color: 'text-blue-600' },
+                        { id: 'passport', label: 'Passeport', icon: FiBook, color: 'text-purple-600' },
+                        { id: 'driving_license', label: 'Permis de conduire', icon: FiTruck, color: 'text-green-600' },
+                        { id: 'residence_permit', label: 'Titre de séjour', icon: FiMapPin, color: 'text-orange-600' },
+                      ].map((doc) => {
+                        const Icon = doc.icon;
+                        return (
+                          <button
+                            key={doc.id}
+                            type="button"
+                            onClick={() => setSelectedDocumentType(doc.id)}
+                            className={`p-4 rounded-xl border-2 transition-all text-left flex items-center gap-3 ${
+                              selectedDocumentType === doc.id
+                                ? 'border-qalby-orange-500 bg-qalby-orange-50'
+                                : 'border-gray-200 hover:border-qalby-orange-200 bg-white'
+                            }`}
+                          >
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                              selectedDocumentType === doc.id ? 'bg-qalby-orange-100' : 'bg-gray-100'
+                            }`}>
+                              <Icon className={`w-5 h-5 ${selectedDocumentType === doc.id ? 'text-qalby-orange-600' : doc.color}`} />
+                            </div>
+                            <span className="font-semibold text-gray-900 flex-1">{doc.label}</span>
+                            {selectedDocumentType === doc.id && (
+                              <FiCheckCircle className="w-5 h-5 text-qalby-orange-600" />
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
