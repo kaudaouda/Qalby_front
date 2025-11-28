@@ -137,15 +137,27 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
+        state.error = null;
         // Confirmer que la session existe
         localStorage.setItem('hasSession', 'true');
       })
-      .addCase(getCurrentUser.rejected, (state) => {
-        state.isLoading = false;
-        state.isAuthenticated = false;
-        state.user = null;
-        // Supprimer le flag de session car les cookies ont expiré ou sont invalides
-        localStorage.removeItem('hasSession');
+      .addCase(getCurrentUser.rejected, (state, action) => {
+        // NE PAS mettre isLoading = false immédiatement
+        // Car l'intercepteur est peut-être en train de refresh le token
+        
+        const hasSession = localStorage.getItem('hasSession');
+        
+        if (!hasSession) {
+          state.isLoading = false;
+          state.isAuthenticated = false;
+          state.user = null;
+          localStorage.removeItem('hasSession');
+        } else {
+          // Garder isLoading = true pour éviter la redirection pendant le refresh
+          // L'intercepteur va réessayer et on aura un nouveau fulfilled ou rejected
+          state.isLoading = true;
+          // Ne pas changer isAuthenticated, on garde l'état précédent
+        }
       });
   },
 });

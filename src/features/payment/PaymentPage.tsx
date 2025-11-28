@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { FiArrowLeft, FiPhone, FiMessageSquare, FiCheck, FiAlertCircle, FiPlus, FiMinus, FiGift } from 'react-icons/fi';
+import { FiArrowLeft, FiPhone, FiMessageSquare, FiCheck, FiAlertCircle, FiPlus, FiMinus } from 'react-icons/fi';
 import { paymentService, type PaymentInitiationData } from '../../services/paymentService';
 import { fundService } from '../../services/fundService';
 import type { Fund } from '../../types';
